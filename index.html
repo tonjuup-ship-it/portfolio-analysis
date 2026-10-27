@@ -1,0 +1,1032 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>[hidden]{display:none!important}html,body{margin:0}</style>
+<title>Portfolio Analysis</title>
+<meta name="theme-color" content="#EEECF4">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap">
+<style>
+/* Liquid Glass: matglazen panelen op zachte kleurvlakken, aubergine als enige accent; semantische kleuren apart */
+:root {
+  --bg: #EEECF4; --fg: #1A1524; --fg2: #4C4558; --fg3: #625A74;
+  --glass: rgba(255,255,255,.58); --glass-border: rgba(255,255,255,.85); --glass-hi: rgba(255,255,255,.9); --shadow: rgba(40,25,70,.22);
+  --line: rgba(40,25,70,.09); --track: rgba(40,25,70,.08);
+  --gloss-a: rgba(255,255,255,.96); --gloss-b: rgba(255,255,255,.62); --gloss-border: rgba(255,255,255,.95);
+  --accent: #5E2F8A; --accent-2: #8A5BB5; --accent-3: #C3A6E0; --accent-soft: rgba(94,47,138,.12); --accent-text: #5E2F8A;
+  --btn-a: #8A5BB5; --btn-b: #5E2F8A;
+  --warn: #9A5A0C; --warn-fill: #E0913A; --ok: #1B7A53; --ok-fill: #2DA57A; --ok-soft: #9FD9C0; --cool: #2F5FC4; --cool-fill: #5C8DEB; --bad: #B23A4C;
+  --blob1: #C9B0FF; --blob2: #FFC4DA; --blob3: #B9DCFF; --blob4: #FFE2C2; --blob-op: .9;
+  --island: #121016; --island-fg: #F3F1F8; --island-fg2: #A9A3B6;
+  --sheet-veil: rgba(30,20,50,.18); --sheet-bg: rgba(248,246,252,.88);
+  --font: 'Geist', 'SF Pro Text', system-ui, -apple-system, sans-serif;
+  --mono: 'Geist Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  --r-xl: 28px; --r-lg: 22px; --r-md: 16px;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0F0B16; --fg: #F2EEF8; --fg2: #C9C1D8; --fg3: #A79FB7;
+  --glass: rgba(34,26,48,.58); --glass-border: rgba(255,255,255,.10); --glass-hi: rgba(255,255,255,.08); --shadow: rgba(0,0,0,.6);
+  --line: rgba(255,255,255,.08); --track: rgba(255,255,255,.09);
+  --gloss-a: rgba(255,255,255,.16); --gloss-b: rgba(255,255,255,.05); --gloss-border: rgba(255,255,255,.14);
+  --accent: #B58BE0; --accent-2: #9C6BCB; --accent-3: #6E4A92; --accent-soft: rgba(181,139,224,.18); --accent-text: #CDAAF0;
+  --btn-a: #9C6BCB; --btn-b: #6A3A96;
+  --warn: #F0B062; --warn-fill: #E0A050; --ok: #5BD39F; --ok-fill: #3CC48D; --ok-soft: #2E6B55; --cool: #9DB8F7; --cool-fill: #7FA4F0; --bad: #F08A97;
+  --blob-op: .24; --island: #000; --island-fg: #F3F1F8; --island-fg2: #9C96A8; --sheet-veil: rgba(0,0,0,.45); --sheet-bg: rgba(22,17,32,.9);
+  color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #0F0B16; --fg: #F2EEF8; --fg2: #C9C1D8; --fg3: #A79FB7;
+  --glass: rgba(34,26,48,.58); --glass-border: rgba(255,255,255,.10); --glass-hi: rgba(255,255,255,.08); --shadow: rgba(0,0,0,.6);
+  --line: rgba(255,255,255,.08); --track: rgba(255,255,255,.09);
+  --gloss-a: rgba(255,255,255,.16); --gloss-b: rgba(255,255,255,.05); --gloss-border: rgba(255,255,255,.14);
+  --accent: #B58BE0; --accent-2: #9C6BCB; --accent-3: #6E4A92; --accent-soft: rgba(181,139,224,.18); --accent-text: #CDAAF0;
+  --btn-a: #9C6BCB; --btn-b: #6A3A96;
+  --warn: #F0B062; --warn-fill: #E0A050; --ok: #5BD39F; --ok-fill: #3CC48D; --ok-soft: #2E6B55; --cool: #9DB8F7; --cool-fill: #7FA4F0; --bad: #F08A97;
+  --blob-op: .24; --island: #000; --island-fg: #F3F1F8; --island-fg2: #9C96A8; --sheet-veil: rgba(0,0,0,.45); --sheet-bg: rgba(22,17,32,.9);
+  color-scheme: dark; }
+
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font); font-size: 15px; margin: 0; -webkit-font-smoothing: antialiased; }
+.app { position: relative; min-height: 100vh; overflow-x: clip; }
+.blobs { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 0; }
+.blobs i { position: absolute; border-radius: 50%; filter: blur(95px); opacity: var(--blob-op); }
+.wrap { position: relative; z-index: 1; max-width: 1280px; margin: 0 auto; padding-block: 24px 90px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 24px; }
+@media (min-width: 900px) { .wrap { padding-left: max(32px, env(safe-area-inset-left, 0px)); padding-right: max(32px, env(safe-area-inset-right, 0px)); } }
+
+/* glas */
+.glass { background: var(--glass); backdrop-filter: blur(28px) saturate(180%); -webkit-backdrop-filter: blur(28px) saturate(180%); border: 1px solid var(--glass-border); border-radius: var(--r-xl); box-shadow: 0 1px 0 var(--glass-hi) inset, 0 18px 40px -20px var(--shadow), 0 2px 6px -2px var(--shadow); min-width: 0; }
+.gloss { background: linear-gradient(180deg, var(--gloss-a), var(--gloss-b)); border: 1px solid var(--gloss-border); box-shadow: 0 1px 2px -1px var(--shadow), 0 6px 14px -8px var(--shadow), inset 0 1px 0 var(--glass-hi); }
+.card { padding: 24px 26px; display: grid; gap: 14px; align-content: start; }
+.card-h { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.card-h h2, .card-h h3 { margin: 0; font-size: 18px; font-weight: 600; letter-spacing: -.01em; }
+.card-h h3 { font-size: 16px; }
+.cap { font-size: 13px; color: var(--fg3); }
+.mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+.num { font-variant-numeric: tabular-nums; }
+.big { font-size: 30px; font-weight: 600; letter-spacing: -.02em; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.huge { font-size: 64px; font-weight: 600; letter-spacing: -.045em; line-height: 1; }
+.muted { color: var(--fg2); }
+.grid { display: grid; gap: 18px; }
+.g2 { grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr)); }
+.g3 { grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); }
+.g4 { grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); }
+.hero { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); }
+.split { grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); }
+@media (max-width: 960px) { .hero, .split { grid-template-columns: 1fr; } }
+
+/* topbalk */
+.top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; }
+.brand { display: flex; align-items: center; gap: 12px; font-size: 18px; font-weight: 600; letter-spacing: -.01em; }
+.brand .logo { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; }
+.navwrap { overflow-x: auto; max-width: 100%; scrollbar-width: none; }
+.nav { display: flex; gap: 2px; padding: 5px; border-radius: 999px; width: max-content; }
+.tab { font: inherit; font-size: 15px; color: var(--fg2); background: none; border: 1px solid transparent; border-radius: 999px; padding: 9px 16px; cursor: pointer; white-space: nowrap; }
+.tab:hover { color: var(--fg); }
+.tab[aria-current="page"] { color: var(--fg); font-weight: 500; background: linear-gradient(180deg, var(--gloss-a), var(--gloss-b)); border-color: var(--gloss-border); box-shadow: 0 1px 2px -1px var(--shadow), 0 6px 14px -8px var(--shadow), inset 0 1px 0 var(--glass-hi); }
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.island { display: flex; align-items: center; gap: 10px; background: var(--island); color: var(--island-fg); border-radius: 999px; padding: 8px 14px 8px 10px; box-shadow: 0 8px 20px -8px rgba(0,0,0,.5); font-size: 13px; white-space: nowrap; }
+.island .dot { width: 8px; height: 8px; border-radius: 50%; background: #34C77B; box-shadow: 0 0 0 3px rgba(52,199,123,.25); }
+.island .mono { color: var(--island-fg2); font-size: 12px; }
+.themebtn { font: inherit; width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; cursor: pointer; color: var(--fg2); }
+
+/* knoppen, pillen */
+.btn { font: inherit; font-size: 14px; font-weight: 500; color: #fff; border: none; border-radius: 999px; padding: 11px 18px; cursor: pointer; background: linear-gradient(180deg, var(--btn-a), var(--btn-b)); box-shadow: inset 0 1px 0 rgba(255,255,255,.4), 0 8px 18px -8px var(--btn-b); }
+.btn2 { font: inherit; font-size: 14px; color: var(--fg); border-radius: 999px; padding: 10px 16px; cursor: pointer; }
+.pill { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 500; padding: 4px 10px; border-radius: 999px; white-space: nowrap; }
+.pill::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.s-ok { color: var(--ok); } .s-warn { color: var(--warn); } .s-bad { color: var(--bad); } .s-acc { color: var(--accent-text); } .s-mut { color: var(--fg3); } .s-cool { color: var(--cool); }
+.chip { font-family: var(--mono); font-size: 13px; padding: 3px 9px; border-radius: 999px; }
+
+/* balken */
+.track { height: 10px; border-radius: 999px; background: var(--track); position: relative; box-shadow: inset 0 1px 2px var(--track); }
+.track > i { position: absolute; inset: 0 auto 0 0; border-radius: 999px; box-shadow: inset 0 1px 0 rgba(255,255,255,.45); }
+.track > b { position: absolute; top: -4px; width: 3px; height: 18px; border-radius: 2px; background: var(--fg); transform: translateX(-50%); }
+.track.thin { height: 7px; }
+.fill-acc { background: linear-gradient(180deg, var(--accent-2), var(--accent)); }
+.fill-warn { background: var(--warn-fill); } .fill-ok { background: var(--ok-fill); } .fill-cool { background: var(--cool-fill); }
+.rows { display: grid; }
+.row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 11px 0; border-top: 1px solid var(--line); font-size: 14px; }
+.row > span:first-child { color: var(--fg2); min-width: 0; }
+.row > span:last-child { font-family: var(--mono); font-variant-numeric: tabular-nums; text-align: right; }
+.prow { display: grid; grid-template-columns: 9rem minmax(0, 1fr) 2.6rem; gap: 12px; align-items: center; font-size: 14px; }
+.prow .v { text-align: right; font-family: var(--mono); }
+
+/* begroeting */
+.hello { display: grid; gap: 8px; padding-top: 6px; }
+.hello h1 { margin: 0; font-size: clamp(34px, 5vw, 48px); font-weight: 600; letter-spacing: -.035em; line-height: 1.05; text-wrap: balance; }
+.hello p { margin: 0; font-size: 18px; color: var(--fg2); max-width: 64ch; line-height: 1.5; }
+.hello p b { color: var(--fg); font-weight: 600; }
+
+/* tabellen */
+.tbl { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th { text-align: left; font-weight: 500; font-size: 12px; color: var(--fg3); padding: 8px 10px; white-space: nowrap; }
+th button { all: unset; cursor: pointer; }
+th[aria-sort="ascending"] button::after { content: " ↑"; } th[aria-sort="descending"] button::after { content: " ↓"; }
+td { padding: 12px 10px; border-top: 1px solid var(--line); white-space: nowrap; font-variant-numeric: tabular-nums; }
+td.r, th.r { text-align: right; }
+tr.click { cursor: pointer; } tr.click:hover td { background: var(--accent-soft); }
+.minibar { display: inline-block; vertical-align: middle; width: 70px; height: 7px; border-radius: 999px; background: var(--track); margin-right: 10px; position: relative; overflow: hidden; }
+.minibar i { position: absolute; inset: 0 auto 0 0; border-radius: 999px; background: linear-gradient(180deg, var(--accent-2), var(--accent)); }
+@media (max-width: 760px) { .opt { display: none; } }
+
+/* segment */
+.seg { display: inline-flex; padding: 4px; border-radius: 999px; gap: 2px; }
+.seg button { font: inherit; font-size: 14px; border: 1px solid transparent; background: none; color: var(--fg2); border-radius: 999px; padding: 7px 14px; cursor: pointer; }
+.seg button[aria-pressed="true"] { color: var(--fg); background: linear-gradient(180deg, var(--gloss-a), var(--gloss-b)); border-color: var(--gloss-border); box-shadow: 0 4px 10px -6px var(--shadow); }
+.search { font: inherit; font-size: 14px; color: var(--fg); background: var(--glass); border: 1px solid var(--glass-border); border-radius: 999px; padding: 9px 16px; min-width: 0; width: 220px; }
+.toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; }
+
+/* beslisketen */
+.chain { display: grid; grid-template-columns: minmax(0,1fr) 36px minmax(0,1fr) 36px minmax(0,1.2fr); align-items: center; gap: 8px; }
+.step { border-radius: 20px; padding: 18px 20px; display: grid; gap: 6px; }
+.step.final { color: #fff; background: linear-gradient(180deg, var(--btn-a), var(--btn-b)); box-shadow: inset 0 1px 0 rgba(255,255,255,.35), 0 14px 26px -14px var(--btn-b); }
+.step.final .cap { color: rgba(255,255,255,.8); }
+@media (max-width: 860px) { .chain { grid-template-columns: 1fr; } .chain svg { transform: rotate(90deg); justify-self: center; } }
+
+/* kandidaat-kaart */
+.score-ball { width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center; font-size: 19px; font-weight: 600; flex: none; }
+
+/* kansenkaart */
+.plot { position: relative; }
+.plot svg { display: block; width: 100%; height: auto; }
+.plot text { font-family: var(--font); }
+.tip { position: absolute; pointer-events: none; padding: 10px 12px; border-radius: 14px; font-size: 13px; display: grid; gap: 2px; min-width: 170px; z-index: 5; }
+
+/* sheet */
+.veil { position: fixed; inset: 0; background: var(--sheet-veil); z-index: 40; backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); }
+.sheet { position: fixed; top: max(12px, env(safe-area-inset-top, 0px)); bottom: max(12px, env(safe-area-inset-bottom, 0px)); right: max(12px, env(safe-area-inset-right, 0px)); width: min(980px, calc(100% - 24px)); z-index: 41; overflow-y: auto; padding: 26px 28px 40px; display: grid; gap: 18px; align-content: start; background: var(--sheet-bg); }
+.sheet .glass { background: var(--glass); }
+@media (prefers-reduced-motion: no-preference) { .sheet { animation: rise .32s cubic-bezier(.2,.8,.2,1); } @keyframes rise { from { transform: translateY(18px); opacity: .6; } to { transform: none; opacity: 1; } } }
+.close { font: inherit; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; color: var(--fg); display: grid; place-items: center; flex: none; }
+.chk { display: grid; grid-template-columns: 22px minmax(0,1fr); gap: 10px; align-items: start; font-size: 14px; padding: 7px 0; border-top: 1px solid var(--line); }
+.chk .ic { width: 20px; height: 20px; border-radius: 50%; display: grid; place-items: center; font-size: 12px; font-weight: 700; color: #fff; }
+.news a { color: var(--fg); text-decoration: underline; text-decoration-color: var(--line); text-underline-offset: 3px; }
+.news a:hover { text-decoration-color: var(--accent); }
+.case p { margin: 0; line-height: 1.55; max-width: 68ch; }
+.k { font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--fg3); margin-bottom: 4px; }
+ul.ontw { margin: 0; padding-left: 1.1rem; display: grid; gap: 8px; line-height: 1.5; }
+
+.plainbtn { background: none; border: none; padding: 0; margin: 0; font: inherit; color: inherit; text-align: left; cursor: pointer; border-radius: 10px; }
+.empty { padding: 36px; text-align: center; display: grid; gap: 8px; justify-items: center; }
+/* verhaal, thema's, financiën */
+.story { display: grid; gap: 22px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); }
+.story section { display: grid; gap: 6px; align-content: start; }
+.story p { margin: 0; line-height: 1.6; }
+.story ul { margin: 0; padding-left: 1.1rem; display: grid; gap: 6px; line-height: 1.5; }
+.story .lead { grid-column: 1 / -1; font-size: 18px; line-height: 1.5; font-weight: 500; letter-spacing: -.01em; max-width: 70ch; }
+.verdict { grid-column: 1 / -1; padding: 16px 18px; border-radius: 18px; }
+.imp { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; font-size: 13px; font-weight: 700; color: #fff; flex: none; }
+.imp.positief { background: var(--ok-fill); } .imp.negatief { background: var(--bad); } .imp.gemengd { background: var(--warn-fill); }
+.party { display: grid; grid-template-columns: 22px 78px minmax(0, 1fr); gap: 10px; align-items: start; padding: 9px 0; border-top: 1px solid var(--line); font-size: 14px; width: 100%; box-sizing: border-box; }
+.party b { font-weight: 600; }
+.scen { display: grid; grid-template-columns: minmax(0, 1fr) 90px; gap: 10px; align-items: center; padding: 10px 0; border-top: 1px solid var(--line); }
+/* chat */
+.fab { position: fixed; right: max(20px, env(safe-area-inset-right, 0px)); bottom: max(20px, env(safe-area-inset-bottom, 0px)); z-index: 42; display: flex; gap: 8px; align-items: center; padding: 13px 20px; border-radius: 999px; font: inherit; font-size: 15px; font-weight: 500; color: #fff; border: none; cursor: pointer; background: linear-gradient(180deg, var(--btn-a), var(--btn-b)); box-shadow: inset 0 1px 0 rgba(255,255,255,.4), 0 14px 30px -10px var(--btn-b); }
+.chat { position: fixed; right: max(16px, env(safe-area-inset-right, 0px)); bottom: max(16px, env(safe-area-inset-bottom, 0px)); width: min(460px, calc(100% - 32px)); height: min(680px, calc(100% - 32px)); z-index: 45; display: grid; grid-template-rows: auto minmax(0, 1fr) auto auto; background: var(--sheet-bg); border-radius: 28px; overflow: hidden; }
+.chat-h { display: flex; justify-content: space-between; align-items: center; padding: 16px 18px 10px; gap: 10px; }
+.msgs { overflow-y: auto; padding: 6px 18px 12px; display: grid; gap: 12px; align-content: start; }
+.msg { font-size: 14.5px; line-height: 1.55; max-width: 92%; overflow-wrap: anywhere; }
+.msg.u { justify-self: end; color: #fff; background: linear-gradient(180deg, var(--btn-a), var(--btn-b)); border-radius: 18px 18px 4px 18px; padding: 10px 14px; }
+.msg.a { justify-self: start; border-radius: 18px 18px 18px 4px; padding: 12px 15px; }
+.msg.a p { margin: 0 0 8px; } .msg.a p:last-child { margin: 0; } .msg.a ul { margin: 0 0 8px; padding-left: 1.1rem; display: grid; gap: 4px; }
+.sugs { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 18px 10px; }
+.sug { font: inherit; font-size: 13px; border-radius: 999px; padding: 7px 12px; cursor: pointer; color: var(--fg); text-align: left; }
+.composer { display: flex; gap: 8px; padding: 12px 14px 14px; border-top: 1px solid var(--line); align-items: flex-end; }
+.composer textarea { flex: 1; resize: none; font: inherit; font-size: 15px; color: var(--fg); background: var(--glass); border: 1px solid var(--glass-border); border-radius: 18px; padding: 10px 14px; max-height: 120px; min-height: 44px; }
+.typing { color: var(--fg3); font-size: 14px; }
+/* kalender */
+.cal-row { display: grid; grid-template-columns: 64px minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) 120px; gap: 14px; align-items: center; padding: 12px 6px; border-top: 1px solid var(--line); width: 100%; box-sizing: border-box; }
+.cal-day { width: 56px; height: 60px; border-radius: 16px; display: grid; place-items: center; align-content: center; line-height: 1.05; }
+.cal-day b { font-size: 22px; font-weight: 600; } .cal-day span { font-size: 11px; color: var(--fg3); text-transform: uppercase; letter-spacing: .05em; }
+@media (max-width: 860px) { .cal-row { grid-template-columns: 64px minmax(0, 1fr) 110px; } .cal-row .opt2 { display: none; } }
+.foot { text-align: center; font-size: 12px; color: var(--fg3); max-width: 70ch; margin: 0 auto; line-height: 1.5; }
+.lock { max-width: 420px; margin: 60px auto; padding: 36px 34px; display: grid; gap: 16px; text-align: center; justify-items: center; }
+.lock input[type=password] { font: inherit; font-size: 16px; width: 100%; color: var(--fg); background: var(--glass); border: 1px solid var(--glass-border); border-radius: 14px; padding: 12px 16px; }
+.lock label.rem { display: flex; gap: 8px; align-items: center; font-size: 14px; color: var(--fg2); }
+.loading { padding: 80px 0; text-align: center; color: var(--fg3); }
+</style>
+
+
+</head>
+<body>
+<div class="app">
+  <div class="blobs" aria-hidden="true">
+    <i style="width:640px;height:640px;left:-160px;top:-200px;background:var(--blob1)"></i>
+    <i style="width:560px;height:560px;right:-140px;top:120px;background:var(--blob2)"></i>
+    <i style="width:660px;height:540px;left:28%;top:62%;background:var(--blob3)"></i>
+    <i style="width:480px;height:480px;left:-120px;top:72%;background:var(--blob4)"></i>
+  </div>
+
+  <div class="wrap">
+    <header class="top">
+      <div class="brand">
+        <img class="logo" src="icon-192.png" alt="" width="40" height="40" style="border-radius:11px;box-shadow:0 6px 14px -8px var(--shadow)">
+        Portfolio Analysis
+      </div>
+      <div class="navwrap">
+        <nav class="nav glass" aria-label="Hoofdmenu" id="nav" hidden>
+          <button class="tab" data-view="overzicht">Overzicht</button>
+          <button class="tab" data-view="maand">Maandkeuze</button>
+          <button class="tab" data-view="kalender">Earnings</button>
+          <button class="tab" data-view="ontwikkelingen">Ontwikkelingen</button>
+          <button class="tab" data-view="aandelen">Aandelen</button>
+          <button class="tab" data-view="etfs">ETF's</button>
+          <button class="tab" data-view="portefeuille">Portefeuille</button>
+          <button class="tab" data-view="logboek">Logboek</button>
+          <button class="tab" data-view="strategie">Strategie</button>
+        </nav>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center">
+        <div class="island" id="island"><span class="dot"></span><span>Live</span><span class="mono" id="island-date">—</span></div>
+        <button class="themebtn gloss" id="lockbtn" aria-label="Vergrendel" title="Vergrendel" hidden><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></button>
+        <button class="themebtn gloss" id="themebtn" aria-label="Wissel licht en donker"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
+      </div>
+    </header>
+
+    <main id="main"><p class="loading">Je cockpit wordt geladen…</p></main>
+
+    <p class="foot">Bronnen: Yahoo Finance, Google News, CNN en je weging uit getquin. Ontwikkelingen en beleggingscases zijn samengevat door Claude. De cockpit laat zien wat jouw eigen regels opleveren en is geen persoonlijk beleggingsadvies.</p>
+  </div>
+</div>
+<div id="sheet-root"></div>
+
+<script>
+(() => {
+  // ---------- helpers ----------
+  const SVGNS = 'http://www.w3.org/2000/svg';
+  function h(tag, attrs, ...kids) {
+    const isSvg = ['svg', 'g', 'circle', 'path', 'line', 'rect', 'text', 'polyline', 'polygon', 'defs', 'linearGradient', 'stop', 'title'].includes(tag);
+    const el = isSvg ? document.createElementNS(SVGNS, tag) : document.createElement(tag);
+    for (const [k, v] of Object.entries(attrs || {})) {
+      if (v == null || v === false) continue;
+      if (k === 'class') el.setAttribute('class', v);
+      else if (k === 'style' && typeof v === 'object') Object.assign(el.style, v);
+      else if (k.startsWith('on')) el.addEventListener(k.slice(2), v);
+      else el.setAttribute(k, v === true ? '' : v);
+    }
+    for (const c of kids.flat(Infinity)) if (c != null && c !== false) el.append(c instanceof Node ? c : document.createTextNode(String(c)));
+    return el;
+  }
+  const NF = {}; const nf = (d) => NF[d] || (NF[d] = new Intl.NumberFormat('nl-NL', { minimumFractionDigits: d, maximumFractionDigits: d }));
+  const minus = (s) => s.replace('-', '−');
+  const has = (v) => v != null && !Number.isNaN(v);
+  const n = (v, d = 0) => has(v) ? minus(nf(d).format(v)) : '—';
+  const pct = (v, d = 1, signed = false) => has(v) ? (signed && v > 0 ? '+' : '') + minus(nf(d).format(v * 100)) + '%' : '—';
+  const pp = (v, d = 1) => has(v) ? minus(nf(d).format(v)) + '%' : '—';
+  const usd = (v) => has(v) ? '$' + nf(2).format(v) : '—';
+  const money = (v, c) => has(v) ? (c === 'EUR' ? '€' : !c || c === 'USD' ? '$' : c + ' ') + nf(2).format(v) : '—';
+  let openTicker = null;
+  const datum = (s) => s ? new Date(s + 'T12:00:00').toLocaleDateString('nl-NL', { day: 'numeric', month: 'short', year: 'numeric' }) : '—';
+  const maandNaam = (s) => s ? new Date(s + '-15T12:00:00').toLocaleDateString('nl-NL', { month: 'long', year: 'numeric' }) : '—';
+  const store = { get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }, set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} } };
+
+  const SIG = { 'Kansenzone': 's-ok', 'Sterk': 's-acc', 'Volgen': 's-mut', 'Warm gelopen': 's-warn', 'Onder de lat': 's-bad', 'Geslaagd': 's-ok', 'Niet geslaagd': 's-bad' };
+  const pill = (txt, cls) => h('span', { class: 'pill gloss ' + (cls || SIG[txt] || 's-mut') }, txt);
+  const ADVIES = { strong_buy: 'Sterk kopen', buy: 'Kopen', hold: 'Houden', underperform: 'Onderwegen', sell: 'Verkopen' };
+  const CNN = { 'extreme fear': 'Extreme angst', fear: 'Angst', neutral: 'Neutraal', greed: 'Hebzucht', 'extreme greed': 'Extreme hebzucht' };
+  const fgLabel = (v) => !has(v) ? '' : v < 25 ? 'Extreme angst' : v < 45 ? 'Angst' : v <= 55 ? 'Neutraal' : v <= 75 ? 'Hebzucht' : 'Extreme hebzucht';
+  const fgCls = (v) => v < 45 ? 's-cool' : v <= 55 ? 's-mut' : 's-warn';
+
+  const track = (val, max, cls, marker) => h('div', { class: 'track' }, h('i', { class: cls, style: { width: Math.max(0, Math.min(100, val / max * 100)) + '%' } }), has(marker) ? h('b', { style: { left: (marker / max * 100) + '%' } }) : null);
+  const card = (title, sub, ...kids) => h('section', { class: 'glass card' }, h('div', { class: 'card-h' }, h('h2', null, title), sub ? h('span', { class: 'cap' }, sub) : null), ...kids);
+  const card3 = (title, sub, ...kids) => h('section', { class: 'glass card' }, h('div', { class: 'card-h' }, h('h3', null, title), sub ? h('span', { class: 'cap' }, sub) : null), ...kids);
+  const rows = (list) => h('div', { class: 'rows' }, list.map(([a, b]) => h('div', { class: 'row' }, h('span', null, a), h('span', null, b))));
+
+  // ---------- thema ----------
+  const root = document.documentElement;
+  const savedTheme = store.get('ck-theme'); if (savedTheme) root.setAttribute('data-theme', savedTheme);
+  document.getElementById('themebtn').addEventListener('click', () => {
+    const cur = root.getAttribute('data-theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    const next = cur === 'dark' ? 'light' : 'dark'; root.setAttribute('data-theme', next); store.set('ck-theme', next);
+  });
+
+  // ---------- data ----------
+  const FILES = ['bronnen', 'financien', 'historie', 'verbanden', 'verhaal', 'aandelen', 'koersen', 'acties', 'nieuws', 'markt', 'analyse', 'checks', 'etfs', 'portfolio', 'blootstelling', 'maandkeuze', 'strategie', 'beslissingen'];
+  let D = null;
+  const b64 = (str) => Uint8Array.from(atob(str), (c) => c.charCodeAt(0));
+  const toB64 = (buf) => btoa(String.fromCharCode(...new Uint8Array(buf)));
+  function accept(raw) { D = raw; D.mk = D.maandkeuze[0]; D.st = D.strategie[0]; D.m = D.markt[0]; D.byT = Object.fromEntries(D.aandelen.map((r) => [r.ticker, r])); D.an = Object.fromEntries(D.analyse.map((r) => [r.ticker, r])); D.vh = Object.fromEntries(D.verhaal.map((r) => [r.ticker, r])); D.vb = D.verbanden.slice().sort((a, b) => a.belang - b.belang); document.getElementById('nav').hidden = false; start(); }
+  const fout = (titel, tekst) => document.getElementById('main').replaceChildren(h('div', { class: 'glass card empty' }, h('h2', { style: { margin: 0 } }, titel), h('p', { class: 'cap' }, tekst)));
+  async function decryptBundle(env, key) {
+    const pt = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: b64(env.iv) }, key, b64(env.ct));
+    const stream = new Blob([pt]).stream().pipeThrough(new DecompressionStream('gzip'));
+    return JSON.parse(await new Response(stream).text());
+  }
+  async function deriveKey(pw, env) {
+    const base = await crypto.subtle.importKey('raw', new TextEncoder().encode(pw), 'PBKDF2', false, ['deriveKey']);
+    return crypto.subtle.deriveKey({ name: 'PBKDF2', salt: b64(env.salt), iterations: env.iter, hash: 'SHA-256' }, base, { name: 'AES-GCM', length: 256 }, true, ['decrypt']);
+  }
+  function showLock(env) {
+    const pw = h('input', { type: 'password', id: 'pa-pw', autocomplete: 'current-password', placeholder: 'Wachtwoord', 'aria-label': 'Wachtwoord' });
+    const rem = h('input', { type: 'checkbox', id: 'pa-rem', checked: true });
+    const msg = h('p', { class: 'cap', 'aria-live': 'polite', style: { margin: 0, minHeight: '18px' } });
+    const btn = h('button', { class: 'btn', type: 'submit', style: { width: '100%' } }, 'Ontgrendel');
+    const form = h('form', { class: 'glass lock' },
+      h('img', { src: 'icon-192.png', alt: '', width: 72, height: 72, style: { borderRadius: '18px' }, onerror: (e) => { e.target.hidden = true; } }),
+      h('h1', { style: { margin: 0, fontSize: '26px', letterSpacing: '-.02em' } }, 'Portfolio Analysis'),
+      h('p', { class: 'muted', style: { margin: 0, lineHeight: 1.5 } }, 'Je data staat versleuteld online. Voer je wachtwoord in om je cockpit te openen.'),
+      pw, h('label', { class: 'rem', for: 'pa-rem' }, rem, 'Onthoud op dit apparaat'), btn, msg);
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault(); btn.disabled = true; msg.textContent = 'Ontgrendelen…';
+      try {
+        const key = await deriveKey(pw.value, env);
+        const data = await decryptBundle(env, key);
+        if (rem.checked) store.set('pa-key', toB64(await crypto.subtle.exportKey('raw', key)));
+        accept(data);
+      } catch (err) { msg.textContent = 'Onjuist wachtwoord. Probeer het opnieuw.'; btn.disabled = false; pw.select(); }
+    });
+    document.getElementById('main').replaceChildren(form);
+    pw.focus();
+  }
+  (async () => {
+    let env = null;
+    try { const r = await fetch('data.enc', { cache: 'no-store' }); if (r.ok) env = await r.json(); } catch (e) { env = null; }
+    if (!env) {
+      try { const res = await Promise.all(FILES.map((f) => fetch('data/' + f + '.json').then((r) => { if (!r.ok) throw new Error(f); return r.json(); }))); accept(Object.fromEntries(FILES.map((f, i) => [f, res[i]]))); }
+      catch (e) { fout('De gegevens konden niet worden geladen', 'Bestand ontbreekt: ' + e.message + '. Vraag Claude om de update opnieuw te publiceren.'); }
+      return;
+    }
+    const lockBtn = document.getElementById('lockbtn'); lockBtn.hidden = false;
+    lockBtn.addEventListener('click', () => { store.set('pa-key', ''); location.reload(); });
+    const saved = store.get('pa-key');
+    if (saved) {
+      try { const key = await crypto.subtle.importKey('raw', b64(saved), 'AES-GCM', true, ['decrypt']); return accept(await decryptBundle(env, key)); }
+      catch (e) { store.set('pa-key', ''); }
+    }
+    showLock(env);
+  })();
+
+  // ---------- routing ----------
+  const VIEWS = { overzicht: viewOverzicht, maand: viewMaand, kalender: viewKalender, ontwikkelingen: viewOntwikkelingen, aandelen: viewAandelen, etfs: viewEtfs, portefeuille: viewPortefeuille, logboek: viewLogboek, strategie: viewStrategie };
+  let current = 'overzicht';
+  function go(view, scroll) {
+    if (!VIEWS[view]) view = 'overzicht';
+    current = view;
+    document.querySelectorAll('#nav .tab').forEach((b) => { if (b.dataset.view === view) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current'); });
+    document.getElementById('main').replaceChildren(VIEWS[view]());
+    try { history.replaceState(null, '', '#' + view); } catch (e) {}
+    if (scroll !== false) window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  document.getElementById('nav').addEventListener('click', (e) => { const b = e.target.closest('.tab'); if (b) go(b.dataset.view); });
+  function start() {
+    document.getElementById('island-date').textContent = datum(D.mk.datum).replace(/ \d{4}$/, '');
+    const hash = location.hash.slice(1);
+    go(VIEWS[hash] ? hash : 'overzicht', false);
+    initChat();
+  }
+
+  // ---------- gedeelde bouwstenen ----------
+  function ringen(mk) {
+    const R = [[98, mk.etfPct / mk.doelEtf, 'var(--accent)', 'var(--accent-soft)'], [72, Math.min(1, mk.themaPct / mk.themaPlafond), 'var(--warn-fill)', 'var(--track)'], [46, mk.aantalAandelen / mk.doelAantalMin, 'var(--ok-fill)', 'var(--track)']];
+    return h('svg', { width: 230, height: 230, viewBox: '0 0 230 230', role: 'img', 'aria-label': `Balansringen: ETF-kern ${pp(mk.etfPct)} van ${mk.doelEtf}%, Big Tech ${pp(mk.themaPct)} tegen plafond ${mk.themaPlafond}%, ${mk.aantalAandelen} van ${mk.doelAantalMin} aandelen`, style: { flex: 'none', maxWidth: '100%' } },
+      h('g', { transform: 'rotate(-90 115 115)', fill: 'none', 'stroke-linecap': 'round' },
+        R.map(([r, f, c, bg]) => { const C = 2 * Math.PI * r; return [h('circle', { cx: 115, cy: 115, r, 'stroke-width': 20, style: { stroke: bg } }), h('circle', { cx: 115, cy: 115, r, 'stroke-width': 20, 'stroke-dasharray': `${Math.min(1, f) * C} ${C}`, style: { stroke: c } })]; })));
+  }
+  function legendItem(color, label, value, sub, subCls) {
+    return h('div', { style: { display: 'flex', gap: '12px', alignItems: 'flex-start' } }, h('span', { style: { width: '12px', height: '12px', borderRadius: '4px', background: color, marginTop: '6px', flex: 'none' } }),
+      h('div', null, h('div', { class: 'muted', style: { fontSize: '15px' } }, label), h('div', { style: { fontSize: '26px', fontWeight: 600, letterSpacing: '-.02em' } }, value, ' ', h('span', { class: subCls || 'cap', style: { fontSize: '15px', fontWeight: 400 } }, sub))));
+  }
+  function keuzeCard(mk) {
+    const etf = D.etfs.find((e) => e.code === mk.keuze);
+    const isEtf = mk.besluit === 'ETF-maand';
+    const a = !isEtf ? D.byT[mk.keuze] : null;
+    const second = isEtf ? D.etfs[1] : D.byT[mk.kandidaat2];
+    return h('section', { class: 'glass card', style: { padding: '28px 30px' } },
+      h('div', { class: 'card-h' }, h('span', { class: 'cap' }, 'Uitkomst van je regels'), pill(mk.besluit, isEtf ? 's-acc' : 's-ok')),
+      h('div', { style: { display: 'flex', alignItems: 'baseline', gap: '14px', flexWrap: 'wrap' } }, h('span', { class: 'huge' }, mk.keuze), h('span', { class: 'cap', style: { fontSize: '15px' } }, 'score ', h('b', { style: { color: 'var(--fg)', fontSize: '22px' } }, n(mk.keuzeScore)))),
+      h('span', { class: 'muted', style: { fontSize: '16px', marginTop: '-6px' } }, mk.keuzeNaam),
+      isEtf && etf ? rows([['Maakt je minder afhankelijk van de VS', etf.aandeelVS + '% VS'], ['Aandeel Big Tech & AI', pp(etf.themaPct)], ['Kosten per jaar', pp(etf.ter, 2)], ['Beweegt mee met je portefeuille', n(etf.correlatie, 2)]])
+        : a ? rows([['Koopcheck', a.checksOk + ' van 12'], ['Veiligheidsmarge', pct(a.veiligheidsmarge, 0, true)], ['Sector', a.sector]]) : null,
+      h('div', { style: { display: 'flex', gap: '10px', flexWrap: 'wrap', marginTop: '4px' } }, h('button', { class: 'btn', onclick: () => go('maand') }, 'Waarom deze keuze'),
+        second ? h('button', { class: 'btn2 gloss', onclick: () => isEtf ? go('etfs') : openSheet(second.ticker) }, 'Tweede keus: ' + (second.code || second.ticker)) : null));
+  }
+  function sentimentGauge(v) {
+    const a = Math.PI * (1 - v / 100), cx = 90 + 76 * Math.cos(a), cy = 86 - 76 * Math.sin(a);
+    return h('svg', { width: '100%', height: 90, viewBox: '0 0 180 96', role: 'img', 'aria-label': 'Fear and Greed ' + v },
+      h('path', { d: 'M14 86 A76 76 0 0 1 166 86', fill: 'none', 'stroke-width': 14, 'stroke-linecap': 'round', style: { stroke: 'var(--track)' } }),
+      h('path', { d: `M14 86 A76 76 0 0 1 ${cx.toFixed(1)} ${cy.toFixed(1)}`, fill: 'none', 'stroke-width': 14, 'stroke-linecap': 'round', style: { stroke: v < 45 ? 'var(--cool-fill)' : v <= 55 ? 'var(--fg3)' : 'var(--warn-fill)' } }),
+      h('circle', { cx: cx.toFixed(1), cy: cy.toFixed(1), r: 9, 'stroke-width': 3, style: { fill: 'var(--bg)', stroke: v < 45 ? 'var(--cool-fill)' : 'var(--warn-fill)' } }));
+  }
+  const posKleur = (() => { const e = ['var(--accent)', 'var(--accent-2)', 'var(--accent-3)']; const a = ['#1E8A5E', '#2DA57A', '#45B98A', '#62C79D', '#80D3B1', '#9FDEC4', '#BDE8D6', '#D3F0E3']; let ie = 0, ia = 0; const m = {}; return (p) => m[p.code] || (m[p.code] = p.type === 'ETF' ? e[ie++ % 3] : a[ia++ % 8]); })();
+  function rankList(list, onClick) {
+    const sigCls = { 'Sterk': 'var(--accent-text)', 'Kansenzone': 'var(--ok)', 'Volgen': 'var(--fg3)', 'Warm gelopen': 'var(--warn)', 'Onder de lat': 'var(--bad)' };
+    return h('div', null, list.map((r, i) => h('button', { class: 'plainbtn', onclick: () => onClick(r.ticker), style: { cursor: 'pointer', display: 'grid', gridTemplateColumns: '34px minmax(0,1.3fr) minmax(0,1fr) 44px 112px', gap: '12px', alignItems: 'center', padding: '12px 0', borderTop: '1px solid var(--line)', width: '100%', boxSizing: 'border-box' } },
+      h('span', { class: 'mono cap' }, String(r.rang).padStart(2, '0')),
+      h('span', { style: { minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' } }, h('b', { style: { fontWeight: 600 } }, r.ticker), ' ', h('span', { class: 'cap' }, r.naam)),
+      track(r.koopscore, 100, 'fill-acc'),
+      h('span', { class: 'mono', style: { textAlign: 'right', fontWeight: 500 } }, n(r.koopscore)),
+      h('span', { class: 'pill gloss', style: { justifySelf: 'end', color: sigCls[r.signaal] } }, r.signaal))));
+  }
+
+  // ---------- OVERZICHT ----------
+  function viewOverzicht() {
+    const mk = D.mk, m = D.m;
+    const uur = new Date().getHours(); const groet = uur < 12 ? 'Goedemorgen' : uur < 18 ? 'Goedemiddag' : 'Goedenavond';
+    const geslaagd = D.aandelen.filter((r) => r.koopcheck === 'Geslaagd').length;
+    const isEtf = mk.besluit === 'ETF-maand';
+    const zin = isEtf ? [h('span', null, 'Je regels kiezen deze maand voor een '), h('b', null, 'ETF'), h('span', null, `. Je kern staat op ${pp(mk.etfPct, 0)} van de beoogde ${mk.doelEtf}%`), mk.themaPct > mk.themaPlafond ? h('span', null, ` en Big Tech weegt ${pp(mk.themaPct, 0)} tegen een plafond van ${mk.themaPlafond}%.`) : '.']
+      : [h('span', null, 'Je regels kiezen deze maand voor een '), h('b', null, 'aandeel'), h('span', null, `: ${mk.keuze}.`)];
+    const kand = [mk.kandidaat1, mk.kandidaat2, mk.kandidaat3].filter(Boolean).map((t) => D.byT[t]);
+    return h('div', { class: 'grid', style: { gap: '22px' } },
+      h('div', { class: 'hello' }, h('span', { class: 'cap', style: { fontSize: '14px' } }, 'Maandronde ' + maandNaam(mk.maand)), h('h1', null, groet + ', Juup.'), h('p', null, zin)),
+      h('div', { class: 'grid hero' },
+        h('section', { class: 'glass card', style: { padding: '28px 30px', display: 'flex', gap: '30px', alignItems: 'center', flexWrap: 'wrap' } },
+          ringen(mk),
+          h('div', { style: { display: 'grid', gap: '16px', flex: '1', minWidth: '230px' } },
+            h('div', null, h('div', { style: { fontSize: '20px', fontWeight: 600 } }, 'Balans van je portefeuille'), h('div', { class: 'cap' }, 'Paars en groen vullen zich richting je doel, oranje staat boven je plafond.')),
+            legendItem('var(--accent)', 'ETF-kern', pp(mk.etfPct), 'van ' + mk.doelEtf + '%'),
+            legendItem('var(--warn-fill)', 'Big Tech & AI', pp(mk.themaPct), 'plafond ' + mk.themaPlafond + '%', mk.themaPct > mk.themaPlafond ? 's-warn' : 'cap'),
+            legendItem('var(--ok-fill)', 'Losse aandelen', String(mk.aantalAandelen), `van ${mk.doelAantalMin}–${mk.doelAantalMax}`))),
+        keuzeCard(mk)),
+      h('div', { class: 'grid g4' },
+        h('section', { class: 'glass card', style: { gap: '6px' } }, h('span', { class: 'cap' }, 'Marktsentiment'), sentimentGauge(m.cnnFg),
+          h('div', { style: { display: 'flex', alignItems: 'baseline', gap: '8px' } }, h('span', { class: 'big' }, n(m.cnnFg)), h('span', { class: fgCls(m.cnnFg), style: { fontSize: '15px' } }, CNN[m.cnnLabel] || '')),
+          h('span', { class: 'cap' }, 'CNN Fear & Greed · vorige maand ' + n(m.cnnVorigeMaand))),
+        h('section', { class: 'glass card' }, h('span', { class: 'cap' }, 'Aandeel VS'), h('span', { class: 'big' }, pp(mk.aandeelVS)), track(mk.aandeelVS, 100, 'fill-cool', mk.wereldVS), h('span', { class: 'cap' }, 'Wereldindex: ' + mk.wereldVS + '%')),
+        h('section', { class: 'glass card' }, h('span', { class: 'cap' }, 'Kandidaten voor later'),
+          kand.map((r) => h('button', { class: 'plainbtn', onclick: () => openSheet(r.ticker), style: { cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center' } }, h('span', null, h('b', null, r.ticker), ' ', h('span', { class: 'cap' }, r.naam)), h('span', { class: 'chip gloss' }, n(r.koopscore))))),
+        h('section', { class: 'glass card' }, h('span', { class: 'cap' }, 'Koopcheck'), h('span', { class: 'big' }, String(geslaagd), h('span', { class: 'cap', style: { fontSize: '15px', fontWeight: 400 } }, ' van ' + D.aandelen.length + ' geslaagd')),
+          h('div', { style: { display: 'flex', gap: '4px', flexWrap: 'wrap' } }, D.aandelen.map((r, i) => h('span', { title: r.ticker, style: { width: '14px', height: '14px', borderRadius: '5px', background: r.koopcheck !== 'Geslaagd' ? 'var(--track)' : kand.includes(r) || (mk.aantalGeslaagd && r.thema !== 'Big Tech & AI') ? 'var(--ok-fill)' : 'var(--ok-soft)' } }))),
+          h('span', { class: 'cap' }, mk.aantalGeslaagd + ' passen ook binnen je plafonds'))),
+      h('section', { class: 'glass card' }, h('div', { class: 'card-h' }, h('h2', null, 'Wat speelt er'), h('button', { class: 'btn2 gloss', onclick: () => go('ontwikkelingen') }, 'Alle ontwikkelingen')),
+        h('div', { class: 'grid g3' }, D.vb.slice(0, 3).map((v) => themeMini(v)))),
+      h('div', { class: 'grid split' },
+        h('section', { class: 'glass card' }, h('div', { class: 'card-h' }, h('h2', null, 'Ranglijst'), h('button', { class: 'btn2 gloss', onclick: () => go('aandelen') }, 'Alle aandelen')),
+          rankList(D.aandelen.slice(0, 6), openSheet)),
+        h('section', { class: 'glass card' }, h('div', { class: 'card-h' }, h('h2', null, 'Je posities'), h('button', { class: 'btn2 gloss', onclick: () => go('portefeuille') }, 'Details')),
+          h('div', { style: { display: 'flex', height: '16px', borderRadius: '999px', overflow: 'hidden', gap: '2px' } }, D.portfolio.map((p) => h('span', { title: p.code, style: { flex: String(p.weging), background: posKleur(p) } }))),
+          h('div', { style: { display: 'grid', gap: '9px' } }, D.portfolio.map((p) => h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '14px' } },
+            h('span', { style: { display: 'flex', alignItems: 'center', gap: '10px' } }, h('span', { style: { width: '10px', height: '10px', borderRadius: '3px', background: posKleur(p) } }), h('b', { style: { fontWeight: 500 } }, p.code), h('span', { class: 'cap' }, p.type)),
+            h('span', { class: 'mono muted' }, pp(p.weging))))))));
+  }
+
+  // ---------- MAANDKEUZE ----------
+  function viewMaand() {
+    const mk = D.mk, m = D.m, isEtf = mk.besluit === 'ETF-maand';
+    const arrow = () => h('svg', { width: 36, height: 16, viewBox: '0 0 36 16', 'aria-hidden': 'true' }, h('path', { d: 'M2 8h28M24 3l6 5-6 5', fill: 'none', 'stroke-width': 2, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', style: { stroke: 'var(--fg3)' } }));
+    const step = (label, title, sub, final) => h('div', { class: 'step ' + (final ? 'final' : 'gloss') }, h('span', { class: 'mono cap' }, label), h('span', { style: { fontSize: final ? '26px' : '21px', fontWeight: 600, letterSpacing: '-.02em' } }, title), h('span', { class: 'cap' }, sub));
+    const kand = [mk.kandidaat1, mk.kandidaat2, mk.kandidaat3].filter(Boolean).map((t) => D.byT[t]);
+    return h('div', { class: 'grid', style: { gap: '22px' } },
+      h('div', { class: 'hello' }, h('span', { class: 'cap', style: { fontSize: '14px' } }, 'Maandronde · ' + datum(mk.datum)), h('h1', null, h('span', { style: { fontWeight: 300 } }, maandNaam(mk.maand).replace(/ \d+$/, '').replace(/^./, (c) => c.toUpperCase()) + ' is een '), mk.besluit.toLowerCase() + '.')),
+      h('section', { class: 'glass card' }, h('span', { class: 'cap' }, 'Zo komen je regels tot deze keuze'),
+        h('div', { class: 'chain' },
+          step('Balans', `Kern ${pp(mk.etfPct, 0)} / ${mk.doelEtf}%`, mk.gap > 0 ? `${n(mk.gap, 1)} punt onder je doel` : 'Op of boven je doel'), arrow(),
+          step('Regel', 'Eerst balans', isEtf ? 'Dus deze maand een ETF' : 'Dus het beste aandeel'), arrow(),
+          step(isEtf ? 'Beste spreider' : 'Beste koopscore', `${mk.keuze} · ${n(mk.keuzeScore)}`, mk.keuzeNaam, true))),
+      h('div', { class: 'grid g4' },
+        tile('ETF-kern', pp(mk.etfPct), track(mk.etfPct, 100, 'fill-acc', mk.doelEtf), 'Doel ' + mk.doelEtf + '%'),
+        tile('Big Tech & AI', pp(mk.themaPct), track(mk.themaPct, 100, 'fill-warn', mk.themaPlafond), 'Plafond ' + mk.themaPlafond + '%, incl. ETF\'s'),
+        tile('Aandeel VS', pp(mk.aandeelVS), track(mk.aandeelVS, 100, 'fill-cool', mk.wereldVS), 'Wereldindex ' + mk.wereldVS + '%'),
+        tile('Losse aandelen', String(mk.aantalAandelen), track(mk.aantalAandelen, mk.doelAantalMax, 'fill-ok', mk.doelAantalMin), `Doel ${mk.doelAantalMin}–${mk.doelAantalMax}`)),
+      h('div', { class: 'grid split' },
+        card('Beste ETF\'s voor je kern', 'spreiding 50% · kosten 20% · waardering 20% · timing 10%',
+          h('div', null, D.etfs.map((e) => etfRow(e)))),
+        h('div', { class: 'grid', style: { gap: '18px', alignContent: 'start' } },
+          card3('Marktsentiment', null, rows([['CNN Fear & Greed', `${n(m.cnnFg)} · ${CNN[m.cnnLabel] || ''}`], ['S&P 500, eigen meting', `${n(m.spyFg)} · ${m.spyFgLabel}`], ['VIX (verwachte beweeglijkheid)', n(m.vix, 1)], ['S&P 500, laatste maand', pct(m.spy1m, 1, true)], ['S&P 500, 12 maanden', pct(m.spy1j, 1, true)]])))),
+      h('div', { class: 'card-h', style: { padding: '0 4px' } }, h('h2', { style: { margin: 0, fontSize: '22px' } }, 'Kandidaten voor de satelliet'), h('span', { class: 'cap' }, 'Halen de koopcheck en passen binnen je plafonds · relevant zodra je kern op doel is')),
+      h('div', { class: 'grid g3' }, kand.map((r) => candidateCard(r))));
+  }
+  function tile(label, value, bar, sub) { return h('section', { class: 'glass card' }, h('span', { class: 'cap' }, label), h('span', { class: 'big' }, value), bar, h('span', { class: 'cap' }, sub)); }
+  function etfRow(e) {
+    return h('div', { style: { display: 'grid', gridTemplateColumns: '34px minmax(0,1fr) 120px 48px', gap: '12px', alignItems: 'center', padding: '12px 0', borderTop: '1px solid var(--line)' } },
+      h('span', { class: 'mono cap' }, String(e.rang).padStart(2, '0')),
+      h('span', { style: { minWidth: 0 } }, h('b', null, e.code), e.weging > 0 ? h('span', { class: 'chip gloss', style: { marginLeft: '8px', fontSize: '11px' } }, 'in bezit ' + pp(e.weging, 0)) : null, h('div', { class: 'cap', style: { overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' } }, e.naam)),
+      track(e.etfScore, 100, 'fill-acc'), h('span', { class: 'mono', style: { textAlign: 'right', fontWeight: 500 } }, n(e.etfScore)));
+  }
+  function candidateCard(r) {
+    const a = D.an[r.ticker];
+    return h('section', { class: 'glass card' },
+      h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px' } }, h('div', null, h('div', { style: { fontSize: '22px', fontWeight: 600 } }, r.ticker), h('div', { class: 'cap' }, r.naam + ' · ' + r.sector)), h('div', { class: 'score-ball gloss' }, n(r.koopscore))),
+      a ? h('p', { style: { margin: 0, fontSize: '14px', lineHeight: 1.55 }, class: 'muted' }, a.kern) : null,
+      h('div', { style: { display: 'flex', gap: '8px', flexWrap: 'wrap' } }, pill(r.koopcheck), pill(r.signaal), h('span', { class: 'pill gloss ' + fgCls(r.fg) }, 'F&G ' + n(r.fg))),
+      h('button', { class: 'btn2 gloss', style: { justifySelf: 'start' }, onclick: () => openSheet(r.ticker) }, 'Bekijk analyse'));
+  }
+
+  // ---------- AANDELEN ----------
+  const ui = { mode: 'lijst', filter: 'alle', q: '', sort: 'rang', dir: 1 };
+  function viewAandelen() {
+    const wrap = h('div', { class: 'grid', style: { gap: '22px' } });
+    const body = h('div');
+    const draw = () => body.replaceChildren(ui.mode === 'lijst' ? table() : kaart());
+    const segBtn = (key, val, label) => h('button', { 'aria-pressed': String(ui[key] === val), onclick: (e) => { ui[key] = val; e.currentTarget.parentNode.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(b === e.currentTarget))); draw(); } }, label);
+    wrap.append(
+      h('div', { class: 'hello' }, h('span', { class: 'cap', style: { fontSize: '14px' } }, D.aandelen.length + ' aandelen · portfolio en watchlist'), h('h1', null, 'Aandelen')),
+      h('div', { class: 'toolbar' },
+        h('div', { class: 'seg glass' }, segBtn('mode', 'lijst', 'Ranglijst'), segBtn('mode', 'kaart', 'Kansenkaart')),
+        h('div', { style: { display: 'flex', gap: '10px', flexWrap: 'wrap', alignItems: 'center' } },
+          h('div', { class: 'seg glass' }, segBtn('filter', 'alle', 'Alle'), segBtn('filter', 'Portfolio', 'Portfolio'), segBtn('filter', 'Watchlist', 'Watchlist'), segBtn('filter', 'geslaagd', 'Geslaagd')),
+          h('label', { for: 'ck-zoek', class: 'cap', style: { position: 'absolute', left: '-9999px' } }, 'Zoek aandeel'),
+          h('input', { id: 'ck-zoek', class: 'search', type: 'search', placeholder: 'Zoek op naam of ticker', value: ui.q, oninput: (e) => { ui.q = e.target.value.toLowerCase(); draw(); } }))),
+      h('section', { class: 'glass card' }, body));
+    draw();
+    return wrap;
+  }
+  function filtered() {
+    return D.aandelen.filter((r) => (ui.filter === 'alle' || r.status === ui.filter || (ui.filter === 'geslaagd' && r.koopcheck === 'Geslaagd')) && (!ui.q || (r.ticker + ' ' + r.naam).toLowerCase().includes(ui.q)));
+  }
+  function table() {
+    const cols = [['rang', '#', 'r'], ['ticker', 'Aandeel', ''], ['koopscore', 'Koopscore', ''], ['koopcheck', 'Koopcheck', ''], ['bedrijfsscore', 'Bedrijf', 'r opt'], ['sFit', 'Fit', 'r opt'], ['fg', 'F&G', 'r'], ['veiligheidsmarge', 'Veiligheidsmarge', 'r opt'], ['signaal', 'Signaal', 'opt'], ['weging', 'Weging', 'r opt']];
+    const list = filtered().sort((a, b) => { const va = a[ui.sort], vb = b[ui.sort]; if (va == null) return 1; if (vb == null) return -1; return (typeof va === 'number' ? va - vb : String(va).localeCompare(String(vb))) * ui.dir; });
+    const thead = h('tr', null, cols.map(([k, l, c]) => h('th', { class: c, 'aria-sort': ui.sort === k ? (ui.dir > 0 ? 'ascending' : 'descending') : 'none' }, h('button', { onclick: () => { ui.dir = ui.sort === k ? -ui.dir : (['rang', 'ticker', 'fg', 'signaal', 'koopcheck'].includes(k) ? 1 : -1); ui.sort = k; document.querySelector('#main section.card').replaceChildren(table()); } }, l))));
+    return h('div', { class: 'tbl' }, h('table', null, h('thead', null, thead), h('tbody', null, list.map((r) => h('tr', { class: 'click', tabindex: '0', onclick: () => openSheet(r.ticker), onkeydown: (e) => { if (e.key === 'Enter') openSheet(r.ticker); } },
+      h('td', { class: 'r mono cap' }, String(r.rang)),
+      h('td', null, h('b', null, r.ticker), ' ', h('span', { class: 'cap' }, r.naam), r.status === 'Portfolio' ? h('span', { class: 'chip gloss', style: { marginLeft: '8px', fontSize: '11px' } }, 'bezit') : null),
+      h('td', null, h('span', { class: 'minibar' }, h('i', { style: { width: r.koopscore + '%' } })), h('span', { class: 'mono' }, n(r.koopscore))),
+      h('td', null, h('span', { class: r.koopcheck === 'Geslaagd' ? 's-ok' : 's-bad' }, (r.koopcheck === 'Geslaagd' ? '✓ ' : '✕ ') + r.checksOk + '/12'), r.rodeVlaggen ? h('span', { class: 's-bad cap' }, ' · ' + r.rodeVlaggen + ' vlag') : null),
+      h('td', { class: 'r opt mono' }, n(r.bedrijfsscore)), h('td', { class: 'r opt mono' }, n(r.sFit)),
+      h('td', { class: 'r mono ' + fgCls(r.fg) }, n(r.fg)),
+      h('td', { class: 'r opt mono ' + (r.veiligheidsmarge >= 0 ? 's-ok' : 's-bad') }, pct(r.veiligheidsmarge, 0, true)),
+      h('td', { class: 'opt' }, pill(r.signaal)),
+      h('td', { class: 'r opt mono' }, r.weging ? pp(r.weging) : '—')))))) ;
+  }
+  function kaart() {
+    const W = 900, H = 440, m = { l: 46, r: 16, t: 16, b: 40 };
+    const x = (v) => m.l + (Math.max(30, Math.min(100, v)) - 30) / 70 * (W - m.l - m.r), y = (v) => H - m.b - v / 100 * (H - m.t - m.b);
+    const list = filtered();
+    const tip = h('div', { class: 'tip glass', hidden: true });
+    const svg = h('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': 'Kansenkaart: bedrijfsscore tegen Fear & Greed' },
+      h('rect', { x: x(70), y: y(45), width: x(100) - x(70), height: y(0) - y(45), rx: 14, style: { fill: 'var(--ok-fill)', fillOpacity: .12 } }),
+      h('rect', { x: x(55), y: y(100), width: x(100) - x(55), height: y(70) - y(100), rx: 14, style: { fill: 'var(--warn-fill)', fillOpacity: .12 } }),
+      h('rect', { x: x(30), y: y(100), width: x(55) - x(30), height: y(0) - y(100), rx: 14, style: { fill: 'var(--bad)', fillOpacity: .06 } }),
+      [30, 40, 50, 60, 70, 80, 90, 100].map((v) => h('text', { x: x(v), y: H - 14, 'text-anchor': 'middle', 'font-size': 12, style: { fill: 'var(--fg3)' } }, v)),
+      [0, 25, 50, 75, 100].map((v) => h('text', { x: m.l - 10, y: y(v) + 4, 'text-anchor': 'end', 'font-size': 12, style: { fill: 'var(--fg3)' } }, v)),
+      h('text', { x: W - m.r - 10, y: y(0) - 10, 'text-anchor': 'end', 'font-size': 13, 'font-weight': 500, style: { fill: 'var(--ok)' } }, 'Kansenzone'),
+      h('text', { x: W - m.r - 10, y: y(100) + 20, 'text-anchor': 'end', 'font-size': 13, 'font-weight': 500, style: { fill: 'var(--warn)' } }, 'Warm gelopen'),
+      h('text', { x: x(30) + 10, y: y(100) + 20, 'font-size': 13, style: { fill: 'var(--fg3)' } }, '↑ Hebzucht'),
+      h('text', { x: x(30) + 10, y: y(0) - 10, 'font-size': 13, style: { fill: 'var(--fg3)' } }, '↓ Angst'));
+    const placed = [];
+    list.slice().sort((a, b) => b.fg - a.fg).forEach((r) => {
+      const cx = x(r.bedrijfsscore), cy = y(r.fg);
+      const c = h('circle', { cx, cy, r: 8, 'stroke-width': 2.5, style: { fill: r.status === 'Portfolio' ? 'var(--accent)' : 'var(--bg)', stroke: 'var(--accent)', cursor: 'pointer' }, tabindex: '0', 'aria-label': `${r.naam}: bedrijfsscore ${r.bedrijfsscore}, F&G ${r.fg}` });
+      c.addEventListener('click', () => openSheet(r.ticker));
+      c.addEventListener('mouseenter', () => { tip.replaceChildren(h('b', null, r.ticker + ' · ' + r.naam), h('span', { class: 'cap' }, `Bedrijfsscore ${r.bedrijfsscore} · koopscore ${r.koopscore}`), h('span', { class: 'cap' }, `F&G ${r.fg} (${fgLabel(r.fg)}) · ${r.signaal}`)); tip.hidden = false; const box = svg.getBoundingClientRect(), s = box.width / W; let lx = cx * s + 14; if (lx + 200 > box.width) lx = cx * s - 214; tip.style.left = lx + 'px'; tip.style.top = Math.max(0, cy * s - 30) + 'px'; });
+      c.addEventListener('mouseleave', () => { tip.hidden = true; });
+      svg.append(c);
+      const wTxt = r.ticker.length * 8 + 4, right = cx < W - 70;
+      let lx = right ? cx + 13 : cx - 13 - wTxt, ly = cy + 4;
+      for (let k = 0; k < 10; k++) { const hit = placed.find((p) => lx < p.x + p.w && lx + wTxt > p.x && ly - 12 < p.y && ly > p.y - 12); if (!hit) break; ly = hit.y + 15; }
+      placed.push({ x: lx, y: ly, w: wTxt });
+      svg.append(h('text', { x: lx, y: ly, 'font-size': 12.5, 'font-weight': 600, style: { fill: 'var(--fg)', pointerEvents: 'none' } }, r.ticker));
+    });
+    return h('div', { class: 'grid', style: { gap: '10px' } }, h('div', { class: 'card-h' }, h('h2', null, 'Kansenkaart'), h('span', { class: 'cap' }, 'Rechtsonder: sterk bedrijf, angstige markt · ● in bezit ○ watchlist')), h('div', { class: 'plot' }, svg, tip), h('span', { class: 'cap' }, 'Bedrijfsscore (kwaliteit, groei, waardering, verwachtingen) horizontaal, Fear & Greed verticaal.'));
+  }
+
+  // ---------- DETAILPANEEL ----------
+  function openSheet(t) {
+    const r = D.byT[t]; if (!r) return;
+    const a = D.an[t] || {};
+    const usd = (v) => money(v, r.valuta);
+    openTicker = t;
+    const close = () => { rootEl.replaceChildren(); document.body.style.overflow = ''; openTicker = null; last && last.focus && last.focus(); };
+    const last = document.activeElement;
+    const rootEl = document.getElementById('sheet-root');
+    const ser = D.koersen.filter((k) => k.ticker === t);
+    const checks = D.checks.filter((c) => c.ticker === t).sort((x, y) => x.nr - y.nr);
+    const acties = D.acties.filter((c) => c.ticker === t);
+    const nieuws = D.nieuws.filter((c) => c.ticker === t);
+    const pillars = [['sKwaliteit', 'Kwaliteit'], ['sGroei', 'Groei'], ['sWaarde', 'Waardering'], ['sAnalisten', 'Verwachtingen'], ['sTiming', 'Timing'], ['sFit', 'Portfolio-fit']];
+    const fgc = [['fg_momentum', 'Koers vs 200-daags gem.', pct(r.koersVs200d, 1, true)], ['fg_rsi', 'RSI (14 dagen)', n(r.rsi14)], ['fg_range', 'Plaats in 52-weeks bandbreedte', pct(r.pos52w, 0)], ['fg_rs', 'Rendement 3 mnd vs S&P 500', pct(r.rs3m, 1, true)], ['fg_vol', 'Beweeglijkheid 20 d vs 1 jaar', n(r.volRatio, 2) + '×'], ['fg_short', 'Short interest vs vorige maand', pct(r.shortChange, 1, true)]];
+    const gmax = Math.max(.05, r.ingeprijsdeGroei || 0, r.verwachteGroei || 0);
+    const cats = [['strongBuy', 'Sterk kopen', 'var(--accent)'], ['buy', 'Kopen', 'var(--accent-2)'], ['hold', 'Houden', 'var(--fg3)'], ['sell', 'Verkopen', 'var(--warn-fill)'], ['strongSell', 'Sterk verkopen', 'var(--bad)']];
+    const lo = Math.min(r.koersdoelLaag ?? r.koers, r.koers) * .97, hi = Math.max(r.koersdoelHoog ?? r.koers, r.koers) * 1.03, sx = (v) => ((v - lo) / (hi - lo) * 100) + '%';
+
+    const sheet = h('div', { class: 'sheet glass', role: 'dialog', 'aria-modal': 'true', 'aria-label': r.naam, onkeydown: (e) => { if (e.key === 'Escape') close(); } },
+      h('div', { style: { display: 'flex', justifyContent: 'space-between', gap: '16px', alignItems: 'flex-start' } },
+        h('div', { style: { display: 'grid', gap: '8px' } },
+          h('div', { style: { display: 'flex', gap: '12px', alignItems: 'baseline', flexWrap: 'wrap' } }, h('span', { style: { fontSize: '40px', fontWeight: 600, letterSpacing: '-.03em' } }, r.ticker), h('span', { class: 'muted', style: { fontSize: '18px' } }, r.naam)),
+          h('div', { style: { display: 'flex', gap: '8px', flexWrap: 'wrap' } }, pill(r.signaal), pill(r.koopcheck), h('span', { class: 'pill gloss s-mut' }, r.sector), h('span', { class: 'pill gloss s-mut' }, r.status + (r.weging ? ' · ' + pp(r.weging) : '')), h('span', { class: 'pill gloss ' + (r.dataKwaliteit >= .9 ? 's-ok' : r.dataKwaliteit >= .75 ? 's-warn' : 's-bad'), title: r.dataOntbreekt ? 'Ontbreekt: ' + r.dataOntbreekt : 'Alle kerncijfers aanwezig' }, 'Data ' + pct(r.dataKwaliteit, 0))),
+          (r.dataOntbreekt || r.dataWaarschuwing) ? h('span', { class: 'cap' }, [r.dataOntbreekt ? 'Ontbreekt: ' + r.dataOntbreekt : null, r.dataWaarschuwing ? 'Let op: ' + r.dataWaarschuwing : null].filter(Boolean).join(' · ')) : null),
+        h('div', { style: { display: 'flex', gap: '16px', alignItems: 'flex-start' } },
+          h('div', { style: { textAlign: 'right' } }, h('div', { class: 'big' }, usd(r.koers)), h('div', { class: 'cap' }, pct(r.rendement1m, 1, true) + ' 1 mnd · ' + pct(r.rendement1j, 1, true) + ' 12 mnd')),
+          h('button', { class: 'close gloss', 'aria-label': 'Sluiten', onclick: close }, h('svg', { width: 16, height: 16, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', 'stroke-width': 2.4, 'stroke-linecap': 'round', 'aria-hidden': 'true' }, h('path', { d: 'M6 6l12 12M18 6L6 18' }))))),
+      prognose(ser, r),
+      
+      h('div', { class: 'grid g2' },
+        card3('Koopscore', 'van 100 · rang ' + r.rang,
+          h('div', { style: { display: 'flex', gap: '10px', alignItems: 'baseline' } }, h('span', { class: 'huge', style: { fontSize: '48px' } }, n(r.koopscore)), h('span', { class: 'cap' }, 'bedrijfsscore ' + n(r.bedrijfsscore))),
+          h('div', { style: { display: 'grid', gap: '10px' } }, pillars.map(([k, l]) => h('div', { class: 'prow' }, h('span', { class: 'muted' }, l), track(r[k] ?? 0, 100, 'fill-acc'), h('span', { class: 'v' }, n(r[k])))))),
+        card3('Koopcheck', `${r.checksOk} van 12 · ${r.rodeVlaggen} rode vlaggen`,
+          h('div', null, checks.map((c) => { const flag = c.soort === 'Rode vlag', ok = c.uitkomst === 'Ja' && !flag; return h('div', { class: 'chk' }, h('span', { class: 'ic', style: { background: flag ? 'var(--bad)' : c.uitkomst == null ? 'var(--fg3)' : ok ? 'var(--ok-fill)' : 'var(--bad)' } }, flag ? '!' : c.uitkomst == null ? '?' : ok ? '✓' : '✕'), h('span', { class: flag ? 's-bad' : '' }, (flag ? 'Rode vlag: ' : '') + c.regel)); }))),
+        card3('Waardering en intrinsieke waarde', 'modelschatting, geen koersdoel',
+          h('div', { style: { display: 'flex', gap: '12px', alignItems: 'baseline', flexWrap: 'wrap' } }, h('span', { class: 'big' }, usd(r.intrinsiekeWaarde)), h('span', { class: 'cap' }, 'geschatte waarde · veiligheidsmarge '), h('b', { class: r.veiligheidsmarge >= 0 ? 's-ok' : 's-bad' }, pct(r.veiligheidsmarge, 0, true))),
+          rows([['Voorzichtig scenario', pct(r.veiligheidsmargeBear, 0, true)], ['Optimistisch scenario', pct(r.veiligheidsmargeBull, 0, true)]]),
+          h('div', { style: { display: 'grid', gap: '10px' } },
+            h('div', { class: 'prow', style: { gridTemplateColumns: '12rem minmax(0,1fr) 3.4rem' } }, h('span', { class: 'muted' }, 'Groei die de koers inprijst'), track((r.ingeprijsdeGroei || 0) / gmax * 100, 100, 'fill-warn'), h('span', { class: 'v' }, pct(r.ingeprijsdeGroei, 1))),
+            h('div', { class: 'prow', style: { gridTemplateColumns: '12rem minmax(0,1fr) 3.4rem' } }, h('span', { class: 'muted' }, 'Verwachte groei'), track((r.verwachteGroei || 0) / gmax * 100, 100, 'fill-acc'), h('span', { class: 'v' }, pct(r.verwachteGroei, 1)))),
+          rows([['Koers/winst (forward)', n(r.fwdPE, 1)], ['PEG', n(r.peg, 2)], ['Vrije-kasstroomrendement', pct(r.fcfYield, 1)], ['EV / EBITDA', n(r.evEbitda, 1)], ['Koers/omzet nu vs eigen historie', n(r.psVsHistorie, 2) + '×']])),
+        card3('Financiën en kwaliteit', 'laatste 12 maanden en boekjaar',
+          rows([['Omzetgroei laatste kwartaal', pct(r.omzetGroei, 1, true)], ['Verwachte omzetgroei volgend jaar', pct(r.omzetGroeiVolgendJaar, 1, true)], ['Verwachte winstgroei per aandeel', pct(r.epsGroeiVolgendJaar, 1, true) + (r.epsVertekend ? ' *' : '')], ['Operationele marge', pct(r.operationeleMarge, 1)], ['Verandering marge (boekjaar)', has(r.margeTrend) ? (r.margeTrend >= 0 ? '+' : '') + n(r.margeTrend * 100, 1) + ' pt' : '—'], ['ROIC', pct(r.roic, 1)], ['Vrije-kasstroommarge', pct(r.fcfMarge, 1)], ['Kasstroom / nettowinst', pct(r.fcfConversie, 0)], ['Netto schuld / EBITDA', n(r.nettoSchuldEbitda, 1) + '×'], ['Verandering aantal aandelen', pct(r.verwatering, 1, true)]]),
+          r.epsVertekend ? h('span', { class: 'cap s-warn' }, '* Vertekend door eenmalige winst; telt niet mee in de groeiscore.') : null),
+        card3('Fear & Greed van dit aandeel', '0 = extreme angst, 100 = extreme hebzucht',
+          h('div', { style: { display: 'flex', alignItems: 'center', gap: '16px' } }, h('div', { style: { width: '180px', flex: 'none' } }, sentimentGauge(r.fg)), h('div', null, h('div', { class: 'big ' + fgCls(r.fg) }, n(r.fg)), h('div', { class: fgCls(r.fg) }, r.fgLabel))),
+          h('div', { style: { display: 'grid', gap: '9px' } }, fgc.map(([k, l, raw]) => h('div', { class: 'prow', style: { gridTemplateColumns: 'minmax(0,1fr) 4.4rem 5rem 2rem', fontSize: '13px' } }, h('span', { class: 'muted' }, l), h('span', { class: 'mono', style: { textAlign: 'right' } }, raw), track(r[k] ?? 0, 100, (r[k] ?? 50) < 45 ? 'fill-cool' : (r[k] ?? 50) > 55 ? 'fill-warn' : 'fill-acc'), h('span', { class: 'v cap' }, n(r[k])))))),
+        card3('Risico en portfolio-fit', 'maakt dit je portefeuille evenwichtiger?',
+          rows([['Beweeglijkheid (12 mnd)', pct(r.vol1j, 0)], ['Grootste daling vanaf top', pct(r.maxDaling1j, 0)], ['Bèta', n(r.beta, 2)], ['Samenhang met je portefeuille', n(r.correlatie, 2)]]),
+          h('div', { style: { display: 'grid', gap: '9px' } }, [['fitSector', 'Sector'], ['fitRegio', 'Regio'], ['fitThema', 'Thema'], ['fitCorrelatie', 'Samenhang'], ['fitGewicht', 'Huidige weging']].map(([k, l]) => h('div', { class: 'prow' }, h('span', { class: 'muted' }, l), track(r[k] ?? 0, 100, 'fill-ok'), h('span', { class: 'v' }, n(r[k])))))),
+        card3('Analisten', `${r.aantalAnalisten || '—'} analisten · gemiddeld advies ${n(r.adviesGem, 2)}`,
+          h('div', { class: 'big' }, ADVIES[r.adviesLabel] || '—'),
+          h('div', { style: { display: 'flex', height: '12px', borderRadius: '999px', overflow: 'hidden', gap: '2px' } }, cats.filter(([k]) => r[k]).map(([k, , c]) => h('span', { style: { flex: String(r[k]), background: c } }))),
+          h('div', { style: { display: 'flex', flexWrap: 'wrap', gap: '4px 14px' } }, cats.map(([k, l, c]) => h('span', { class: 'cap', style: { display: 'flex', alignItems: 'center', gap: '6px' } }, h('span', { style: { width: '8px', height: '8px', borderRadius: '2px', background: c } }), l + ' ' + (r[k] ?? 0)))),
+          has(r.koersdoelLaag) ? h('div', { style: { display: 'grid', gap: '6px', marginTop: '6px' } },
+            h('div', { style: { position: 'relative', height: '30px' } },
+              h('div', { style: { position: 'absolute', top: '13px', height: '6px', borderRadius: '999px', background: 'var(--accent-soft)', left: sx(r.koersdoelLaag), width: `calc(${sx(r.koersdoelHoog)} - ${sx(r.koersdoelLaag)})` } }),
+              h('div', { style: { position: 'absolute', top: '8px', width: '3px', height: '16px', borderRadius: '2px', background: 'var(--accent)', left: sx(r.koersdoelGem), transform: 'translateX(-50%)' } }),
+              h('div', { style: { position: 'absolute', top: '6px', width: '3px', height: '20px', borderRadius: '2px', background: 'var(--fg)', left: sx(r.koers), transform: 'translateX(-50%)' } })),
+            h('div', { style: { display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '6px' }, class: 'cap' }, h('span', null, 'Laag ' + usd(r.koersdoelLaag)), h('span', null, 'Gemiddeld ' + usd(r.koersdoelGem) + ' (' + pct(r.upside, 0, true) + ')'), h('span', null, 'Hoog ' + usd(r.koersdoelHoog)))) : null,
+          rows([['Bijstelling winstverwachting 90 d', pct(r.epsRevisie90d, 1, true)], ['Verwachting verslagen (laatste 4 kw.)', has(r.beats4k) ? r.beats4k + ' van 4' : '—'], ['Upgrades / downgrades 30 d', `${r.upgrades30d} / ${r.downgrades30d}`]])),
+        card3('Recente analistenacties', 'laatste 60 dagen',
+          acties.length ? h('div', { class: 'tbl' }, h('table', null, h('tbody', null, acties.map((c) => h('tr', null, h('td', { class: 'cap' }, datum(c.datum)), h('td', null, c.firma), h('td', { class: 'opt' }, c.actie), h('td', null, c.oordeel), h('td', { class: 'r mono' }, has(c.doelNieuw) ? usd(c.doelNieuw) : '—')))))) : h('span', { class: 'cap' }, 'Geen acties in de laatste 60 dagen.'))),
+      verhaalCard(r),
+      h('div', { class: 'grid g2' }, kwartaalCard(r), peersCard(r)),
+      verbandenCard(r),
+      card3('Nieuws van de afgelopen maand', a.nieuwsSentiment ? 'sentiment: ' + a.nieuwsSentiment.toLowerCase() : null,
+        h('div', { class: 'news', style: { display: 'grid', gap: '8px' } }, nieuws.map((x) => h('div', { style: { display: 'grid', gridTemplateColumns: '84px minmax(0,1fr)', gap: '10px', fontSize: '14px', paddingTop: '8px', borderTop: '1px solid var(--line)' } }, h('span', { class: 'cap' }, datum(x.datum).replace(/ \d{4}$/, '')), h('span', null, /^https:\/\//.test(x.link || '') ? h('a', { href: x.link, target: '_blank', rel: 'noopener' }, x.titel) : x.titel, h('span', { class: 'cap' }, ' · ' + x.bron)))))));
+    rootEl.replaceChildren(h('div', { class: 'veil', onclick: close }), sheet);
+    document.body.style.overflow = 'hidden';
+    sheet.querySelector('.close').focus();
+  }
+  function prognose(ser, r) {
+    if (!ser.length) return null;
+    const cur = (v) => money(v, r.valuta);
+    const W = 960, H = 340, m = { l: 10, r: 168, t: 22, b: 52 };
+    const pts = ser.map((s) => ({ d: new Date(s.datum + 'T12:00:00').getTime(), v: s.koers }));
+    const t0 = pts[0].d, tNow = pts[pts.length - 1].d, tEnd = tNow + 365 * 864e5, now = r.koers ?? pts[pts.length - 1].v;
+    const doelen = [['Max', r.koersdoelHoog, 'var(--ok)'], ['Gem.', r.koersdoelGem, 'var(--accent-text)'], ['Min', r.koersdoelLaag, 'var(--warn)']].filter(([, v]) => has(v));
+    const all = pts.map((p) => p.v).concat(doelen.map(([, v]) => v), [now]);
+    let lo = Math.min(...all), hi = Math.max(...all); const pad = (hi - lo) * .1 || 1; lo -= pad; hi += pad;
+    const X = (t) => m.l + (t - t0) / (tEnd - t0) * (W - m.l - m.r), Y = (v) => m.t + (1 - (v - lo) / (hi - lo)) * (H - m.t - m.b);
+    const line = pts.map((p) => `${X(p.d).toFixed(1)},${Y(p.v).toFixed(1)}`).join(' ');
+    const el = [h('defs', null, h('linearGradient', { id: 'pg', x1: 0, x2: 0, y1: 0, y2: 1 }, h('stop', { offset: 0, style: { stopColor: 'var(--accent)', stopOpacity: .28 } }), h('stop', { offset: 1, style: { stopColor: 'var(--accent)', stopOpacity: 0 } })))];
+    for (let i = 0; i <= 4; i++) { const v = lo + (hi - lo) * i / 4; el.push(h('line', { x1: m.l, x2: W - m.r, y1: Y(v), y2: Y(v), style: { stroke: 'var(--line)' } })); }
+    el.push(h('rect', { x: X(tNow), y: m.t, width: X(tEnd) - X(tNow), height: H - m.t - m.b, rx: 12, style: { fill: 'var(--accent-soft)', fillOpacity: .45 } }));
+    if (doelen.length > 1) el.push(h('polygon', { points: `${X(tNow)},${Y(now)} ${X(tEnd)},${Y(doelen[0][1])} ${X(tEnd)},${Y(doelen[doelen.length - 1][1])}`, style: { fill: 'var(--ok-fill)', fillOpacity: .16 } }));
+    doelen.forEach(([, v, c]) => el.push(h('line', { x1: X(tNow), y1: Y(now), x2: X(tEnd), y2: Y(v), 'stroke-dasharray': '4 5', 'stroke-width': 1.6, style: { stroke: c } })));
+    el.push(h('polygon', { points: `${X(t0)},${H - m.b} ${line} ${X(tNow)},${H - m.b}`, style: { fill: 'url(#pg)' } }));
+    el.push(h('polyline', { points: line, fill: 'none', 'stroke-width': 2.4, 'stroke-linejoin': 'round', 'stroke-linecap': 'round', style: { stroke: 'var(--accent)' } }));
+    el.push(h('line', { x1: X(tNow), x2: W - m.r, y1: Y(now), y2: Y(now), 'stroke-width': 1.4, style: { stroke: 'var(--fg3)' } }));
+    el.push(h('circle', { cx: X(tNow), cy: Y(now), r: 5, 'stroke-width': 3, style: { fill: 'var(--accent)', stroke: 'var(--bg)' } }));
+    // maanden en jaren onder de as
+    const dd = new Date(t0); dd.setDate(1); dd.setMonth(dd.getMonth() + 1);
+    while (dd.getTime() < tEnd) {
+      if (dd.getMonth() % 3 === 0) { const x = X(dd.getTime()); const jan = dd.getMonth() === 0;
+        el.push(h('text', { x, y: H - m.b + 20, 'text-anchor': 'middle', 'font-size': 12, 'font-weight': jan ? 600 : 400, style: { fill: jan ? 'var(--fg)' : 'var(--fg3)' } }, jan ? String(dd.getFullYear()) : dd.toLocaleDateString('nl-NL', { month: 'short' }).replace('.', ''))); }
+      dd.setMonth(dd.getMonth() + 1);
+    }
+    el.push(h('text', { x: (X(t0) + X(tNow)) / 2, y: H - 6, 'text-anchor': 'middle', 'font-size': 11, 'letter-spacing': '.08em', style: { fill: 'var(--fg3)' } }, 'AFGELOPEN 2 JAAR'));
+    el.push(h('text', { x: (X(tNow) + X(tEnd)) / 2, y: H - 6, 'text-anchor': 'middle', 'font-size': 11, 'letter-spacing': '.08em', style: { fill: 'var(--fg3)' } }, 'PROGNOSE 1 JAAR'));
+    // labels rechts, zonder overlap
+    const labs = doelen.map(([l, v, c]) => ({ l: l + ' ' + pct(v / now - 1, 0, true), v, c, y: Y(v) })).concat([{ l: 'Nu', v: now, c: 'var(--fg)', y: Y(now) }]).sort((a, b) => a.y - b.y);
+    for (let i = 1; i < labs.length; i++) if (labs[i].y - labs[i - 1].y < 24) labs[i].y = labs[i - 1].y + 24;
+    const over = labs.length ? labs[labs.length - 1].y - (H - m.b + 4) : 0; if (over > 0) labs.forEach((q) => { q.y -= over; });
+    labs.forEach((q) => { el.push(h('circle', { cx: W - m.r + 14, cy: q.y - 4, r: 4, style: { fill: q.c } }), h('text', { x: W - m.r + 24, y: q.y, 'font-size': 12.5, style: { fill: 'var(--fg2)' } }, q.l), h('text', { x: W - 4, y: q.y, 'text-anchor': 'end', 'font-size': 12.5, 'font-weight': 600, style: { fill: 'var(--fg)' } }, cur(q.v))); });
+    return h('section', { class: 'glass card', style: { gap: '8px' } },
+      h('div', { class: 'card-h' }, h('h3', null, 'Koers en prognose'), h('span', { class: 'cap' }, doelen.length ? `${r.aantalAnalisten || '—'} analisten · gemiddeld koersdoel ${cur(r.koersdoelGem)} (${pct(r.upside, 0, true)})` : 'Geen koersdoelen beschikbaar')),
+      h('svg', { viewBox: `0 0 ${W} ${H}`, width: '100%', role: 'img', 'aria-label': `Koers afgelopen twee jaar en koersdoelen van analisten voor ${r.naam}`, style: { display: 'block' } }, el),
+      h('span', { class: 'cap' }, 'De waaier toont het hoogste, gemiddelde en laagste koersdoel van analisten voor over 12 maanden. Een koersdoel is een verwachting, geen zekerheid.'));
+  }
+
+  // ---------- VERHAAL, VERBANDEN, CIJFERS, PEERS ----------
+  function verhaalCard(r) {
+    const v = D.vh[r.ticker]; if (!v) return null;
+    const list = (arr) => h('ul', null, (arr || []).map((x) => h('li', null, x)));
+    const sec = (k, ...kids) => h('section', null, h('p', { class: 'k' }, k), ...kids);
+    return h('section', { class: 'glass card', style: { padding: '28px 30px' } },
+      h('div', { class: 'card-h' }, h('h2', null, 'Het verhaal van ' + r.naam), h('span', { class: 'cap' }, 'samengesteld door Claude uit cijfers en nieuws · ' + datum(D.mk.datum))),
+      h('div', { class: 'story' },
+        h('p', { class: 'lead' }, v.kern),
+        sec('Wat doet het bedrijf', h('p', null, v.watDoetHet)),
+        sec('Hoe verdient het geld', h('p', null, v.verdienmodel)),
+        sec('Waar staat het nu', h('p', null, v.nu)),
+        sec('De cijfers door de jaren', h('p', null, v.financien)),
+        sec('Wat speelt er', list(v.ontwikkelingen)),
+        sec('Komende momenten', list(v.catalysts)),
+        sec('Kansen', list(v.kansen)),
+        sec('Risico\'s', list(v.risicos)),
+        sec('Waardering', h('p', null, v.waardering)),
+        sec('Wat moet waar zijn', h('p', null, v.wwmz)),
+        h('div', { class: 'verdict gloss' }, h('p', { class: 'k' }, 'Wat de data zegt'), h('p', { style: { margin: 0, lineHeight: 1.6 } }, v.conclusie))));
+  }
+  const themaVoor = (t) => D.vb.filter((v) => v.betrokken.some((b) => b.ticker === t));
+  const impIcon = (i) => h('span', { class: 'imp ' + i, 'aria-label': i }, i === 'positief' ? '+' : i === 'negatief' ? '−' : '±');
+  function verbandenCard(r) {
+    const th = themaVoor(r.ticker); if (!th.length) return null;
+    return card3('Verbonden ontwikkelingen', 'hoe dit bedrijf samenhangt met de rest',
+      h('div', { class: 'grid g2' }, th.map((v) => { const me = v.betrokken.find((b) => b.ticker === r.ticker);
+        return h('div', { class: 'glass', style: { padding: '18px 20px', borderRadius: '20px', display: 'grid', gap: '8px', alignContent: 'start' } },
+          h('div', { style: { display: 'flex', gap: '10px', alignItems: 'center' } }, impIcon(me.impact), h('b', null, v.titel)),
+          h('p', { style: { margin: 0, fontSize: '14px', lineHeight: 1.55 }, class: 'muted' }, me.rol + ': ' + me.uitleg),
+          h('div', { style: { display: 'flex', gap: '6px', flexWrap: 'wrap' } }, v.betrokken.filter((b) => b.ticker !== r.ticker).map((b) => h('button', { class: 'chip gloss', style: { cursor: 'pointer', border: 'none' }, onclick: () => openSheet(b.ticker) }, b.ticker))),
+          h('button', { class: 'plainbtn cap', style: { color: 'var(--accent-text)' }, onclick: () => { document.getElementById('sheet-root').replaceChildren(); document.body.style.overflow = ''; go('ontwikkelingen'); } }, 'Volledig verhaal →')); })));
+  }
+  const kw = (p) => { const d = new Date(p + 'T12:00:00'); return 'Q' + (Math.floor(d.getMonth() / 3) + 1) + " '" + String(d.getFullYear()).slice(2); };
+  function kwartaalCard(r) {
+    const F = D.financien.filter((f) => f.ticker === r.ticker);
+    let rows = F.filter((f) => f.soort === 'Q'), soort = 'Kwartaal';
+    if (rows.length < 3) { rows = F.filter((f) => f.soort === 'J'); soort = 'Jaar'; }
+    if (!rows.length) return card3('Kwartaalcijfers', null, h('span', { class: 'cap' }, 'Geen cijfers beschikbaar.'));
+    rows = rows.slice().reverse();
+    const vt = rows[rows.length - 1].valuta || '', mld = (v) => has(v) ? n(v / 1000, 1) : '—';
+    const W = 560, H = 210, m = { l: 8, r: 8, t: 16, b: 30 }, bw = (W - m.l - m.r) / rows.length;
+    const mx = Math.max(...rows.map((x) => x.omzet || 0)) || 1;
+    const mg = rows.map((x) => x.opMarge).filter(has), mgMax = Math.max(.05, ...mg), mgMin = Math.min(0, ...mg);
+    const Y = (v) => m.t + (1 - v / mx) * (H - m.t - m.b), YM = (v) => m.t + (1 - (v - mgMin) / (mgMax - mgMin)) * (H - m.t - m.b) * .9;
+    const el = [];
+    rows.forEach((x, i) => { const x0 = m.l + i * bw + bw * .18, w = bw * .64, last = i === rows.length - 1;
+      el.push(h('rect', { x: x0, y: Y(x.omzet || 0), width: w, height: H - m.b - Y(x.omzet || 0), rx: 6, style: { fill: last ? 'var(--accent)' : 'var(--accent-3)' } }));
+      el.push(h('text', { x: x0 + w / 2, y: Y(x.omzet || 0) - 5, 'text-anchor': 'middle', 'font-size': 11, 'font-weight': last ? 600 : 400, style: { fill: 'var(--fg2)' } }, mld(x.omzet)));
+      el.push(h('text', { x: x0 + w / 2, y: H - 10, 'text-anchor': 'middle', 'font-size': 11, style: { fill: 'var(--fg3)' } }, soort === 'Jaar' ? x.periode.slice(0, 4) : kw(x.periode))); });
+    const pts = rows.map((x, i) => has(x.opMarge) ? `${(m.l + i * bw + bw / 2).toFixed(1)},${YM(x.opMarge).toFixed(1)}` : null).filter(Boolean);
+    if (pts.length > 1) el.push(h('polyline', { points: pts.join(' '), fill: 'none', 'stroke-width': 2.2, 'stroke-linejoin': 'round', style: { stroke: 'var(--ok-fill)' } }));
+    rows.forEach((x, i) => { if (has(x.opMarge)) el.push(h('circle', { cx: m.l + i * bw + bw / 2, cy: YM(x.opMarge), r: 3.5, style: { fill: 'var(--ok-fill)' } })); });
+    const laatste = rows[rows.length - 1];
+    return card3(soort === 'Jaar' ? 'Jaarcijfers' : 'Kwartaalcijfers', `omzet in mld ${vt} · groene lijn = operationele marge`,
+      h('svg', { viewBox: `0 0 ${W} ${H}`, width: '100%', role: 'img', 'aria-label': 'Omzet en operationele marge per ' + soort.toLowerCase(), style: { display: 'block' } }, el),
+      h('div', { class: 'tbl' }, h('table', null,
+        h('thead', null, h('tr', null, ['Periode', 'Omzet', 'J/j', 'Marge', 'Winst', 'Vrije kasstroom'].map((l, i) => h('th', { class: i ? 'r' : '' }, l)))),
+        h('tbody', null, rows.slice().reverse().slice(0, 5).map((x) => h('tr', null, h('td', null, soort === 'Jaar' ? x.periode.slice(0, 4) : kw(x.periode)), h('td', { class: 'r mono' }, mld(x.omzet)), h('td', { class: 'r mono ' + (x.groeiJ > 0 ? 's-ok' : x.groeiJ < 0 ? 's-bad' : '') }, pct(x.groeiJ, 0, true)), h('td', { class: 'r mono' }, pct(x.opMarge, 0)), h('td', { class: 'r mono' }, mld(x.nettowinst)), h('td', { class: 'r mono ' + (x.fcf < 0 ? 's-bad' : '') }, mld(x.fcf))))))),
+      soort === 'Jaar' ? h('span', { class: 'cap' }, r.naam + ' rapporteert per halfjaar; daarom jaarcijfers.') : laatste.bron ? h('span', { class: 'cap' }, 'Laatste kwartaal uit de Earnings Reviewer; Yahoo heeft het nog niet verwerkt.') : null);
+  }
+  function peersCard(r) {
+    const peers = D.aandelen.filter((x) => x.sector === r.sector).sort((a, b) => b.koopscore - a.koopscore);
+    if (peers.length < 2) return card3('Sectorgenoten', r.sector, h('span', { class: 'cap' }, 'Geen andere bedrijven uit deze sector in de cockpit.'));
+    const cols = [['koopscore', 'Score', (v) => n(v)], ['omzetGroei', 'Groei', (v) => pct(v, 0, true)], ['operationeleMarge', 'Marge', (v) => pct(v, 0)], ['roic', 'ROIC', (v) => pct(v, 0)], ['fwdPE', 'K/w', (v) => n(v, 1)], ['veiligheidsmarge', 'Marge DCF', (v) => pct(v, 0, true)]];
+    return card3('Sectorgenoten', r.sector + ' · ' + peers.length + ' bedrijven',
+      h('div', { class: 'tbl' }, h('table', null,
+        h('thead', null, h('tr', null, h('th', null, ''), cols.map(([, l]) => h('th', { class: 'r' }, l)))),
+        h('tbody', null, peers.map((p) => h('tr', { class: 'click', style: p.ticker === r.ticker ? { background: 'var(--accent-soft)' } : null, onclick: () => p.ticker !== r.ticker && openSheet(p.ticker) },
+          h('td', null, h('b', null, p.ticker)), cols.map(([k, , f]) => h('td', { class: 'r mono' }, f(p[k])))))))),
+      h('span', { class: 'cap' }, 'Vergelijk binnen de sector: marges en waarderingen verschillen sterk tussen sectoren.'));
+  }
+  function themeMini(v) {
+    return h('button', { class: 'plainbtn glass', style: { padding: '18px 20px', borderRadius: '20px', display: 'grid', gap: '8px', alignContent: 'start' }, onclick: () => go('ontwikkelingen') },
+      h('span', { class: 'cap' }, v.status), h('b', { style: { fontSize: '16px' } }, v.titel),
+      h('div', { style: { display: 'flex', gap: '6px', flexWrap: 'wrap' } }, v.betrokken.map((b) => h('span', { class: 'chip gloss', style: { display: 'inline-flex', gap: '6px', alignItems: 'center' } }, h('span', { style: { width: '7px', height: '7px', borderRadius: '50%', background: b.impact === 'positief' ? 'var(--ok-fill)' : b.impact === 'negatief' ? 'var(--bad)' : 'var(--warn-fill)' } }), b.ticker))));
+  }
+
+  // ---------- ONTWIKKELINGEN ----------
+  function viewOntwikkelingen() {
+    const eigen = D.portfolio.filter((p) => p.type !== 'ETF').map((p) => ({ p, th: themaVoor(p.code) }));
+    return h('div', { class: 'grid', style: { gap: '22px' } },
+      h('div', { class: 'hello' }, h('span', { class: 'cap', style: { fontSize: '14px' } }, D.vb.length + ' thema\'s · stand van ' + datum(D.mk.datum)), h('h1', null, 'Ontwikkelingen'), h('p', null, 'Wat er speelt, en vooral hoe het samenhangt: één gebeurtenis raakt vaak meerdere bedrijven tegelijk, soms in tegengestelde richting.')),
+      card('Wat raakt jouw aandelen', 'per positie: positief, gemengd of negatief',
+        h('div', { class: 'grid g3' }, eigen.map(({ p, th }) => h('button', { class: 'plainbtn glass', style: { padding: '14px 16px', borderRadius: '18px', display: 'grid', gap: '8px' }, onclick: () => openSheet(p.code) },
+          h('div', { style: { display: 'flex', justifyContent: 'space-between' } }, h('b', null, p.code), h('span', { class: 'cap' }, pp(p.weging))),
+          h('div', { style: { display: 'grid', gap: '6px' } }, th.length ? th.map((v) => { const me = v.betrokken.find((b) => b.ticker === p.code); return h('div', { style: { display: 'flex', gap: '8px', alignItems: 'center', fontSize: '13px' } }, impIcon(me.impact), h('span', null, v.titel)); }) : h('span', { class: 'cap' }, 'Geen grote thema\'s deze maand')))))),
+      D.vb.map((v) => h('section', { class: 'glass card', id: 'thema-' + v.id },
+        h('div', { class: 'card-h' }, h('h2', null, v.titel), h('span', { class: 'pill gloss ' + (v.status === 'Speelt nu' ? 's-acc' : 's-warn') }, v.status)),
+        h('div', { class: 'story' },
+          h('section', null, h('p', { class: 'k' }, 'Wat er gebeurt'), h('p', null, v.samenvatting)),
+          h('section', null, h('p', { class: 'k' }, 'Waarom het ertoe doet'), h('p', null, v.waaromBelangrijk))),
+        h('div', null, v.betrokken.map((b) => h('button', { class: 'plainbtn party', onclick: () => D.byT[b.ticker] && openSheet(b.ticker) }, impIcon(b.impact), h('span', null, h('b', null, b.ticker), D.byT[b.ticker] && D.byT[b.ticker].status === 'Portfolio' ? h('div', { class: 'cap' }, 'in bezit') : null), h('span', null, h('span', { class: 'muted' }, b.rol + '. '), b.uitleg)))),
+        v.letOp ? h('div', { class: 'verdict gloss', style: { padding: '12px 16px' } }, h('span', { class: 'k' }, 'Let op  '), h('span', null, v.letOp)) : null)),
+      h('p', { class: 'cap', style: { margin: 0 } }, 'Samengesteld door Claude uit de nieuwskoppen, kwartaalcijfers en kengetallen van deze maand. Bij twijfel weegt de data zwaarder dan het verhaal.'));
+  }
+
+  // ---------- EARNINGS ----------
+  function viewKalender() {
+    const vandaag = D.mk.datum, dagen = (d) => Math.round((new Date(d + 'T12:00:00') - new Date(vandaag + 'T12:00:00')) / 864e5);
+    const met = D.aandelen.filter((r) => r.volgendeEarnings).sort((a, b) => a.volgendeEarnings.localeCompare(b.volgendeEarnings));
+    const zonder = D.aandelen.filter((r) => !r.volgendeEarnings);
+    const week = met.filter((r) => dagen(r.volgendeEarnings) <= 7), eigen = met.filter((r) => r.status === 'Portfolio');
+    const groepen = {}; met.forEach((r) => { (groepen[r.volgendeEarnings.slice(0, 7)] ||= []).push(r); });
+    const wanneer = (n0) => n0 <= 0 ? 'vandaag' : n0 === 1 ? 'morgen' : 'over ' + n0 + ' dagen';
+    const rij = (r) => { const d = new Date(r.volgendeEarnings + 'T12:00:00'), n0 = dagen(r.volgendeEarnings);
+      return h('button', { class: 'plainbtn cal-row', onclick: () => openSheet(r.ticker) },
+        h('span', { class: 'cal-day gloss' }, h('b', null, String(d.getDate())), h('span', null, d.toLocaleDateString('nl-NL', { weekday: 'short' }).replace('.', ''))),
+        h('span', { style: { minWidth: 0 } }, h('b', { style: { fontSize: '16px' } }, r.ticker), ' ', h('span', { class: 'cap' }, r.naam), r.status === 'Portfolio' ? h('span', { class: 'chip gloss', style: { marginLeft: '8px', fontSize: '11px' } }, 'bezit') : null, h('div', { class: 'cap' }, r.sector)),
+        h('span', { class: 'opt2' }, h('div', { class: 'cap' }, 'Verwachte winst/aandeel'), h('div', { class: 'mono' }, has(r.epsVerwacht) ? n(r.epsVerwacht, 2) : '—')),
+        h('span', { class: 'opt2' }, h('div', { class: 'cap' }, 'Verwachte omzet'), h('div', { class: 'mono' }, has(r.omzetVerwachtMld) ? n(r.omzetVerwachtMld, 1) + ' mld' : '—')),
+        h('span', { class: 'opt2' }, h('div', { class: 'cap' }, 'Vorige keer'), h('div', { class: 'mono ' + (r.laatsteVerrassing > 0 ? 's-ok' : r.laatsteVerrassing < 0 ? 's-bad' : '') }, has(r.laatsteVerrassing) ? (r.laatsteVerrassing > 0 ? 'beat ' : 'mis ') + pct(r.laatsteVerrassing, 0, true) : '—')),
+        h('span', { class: 'pill gloss ' + (n0 <= 7 ? 's-acc' : 's-mut'), style: { justifySelf: 'end' } }, wanneer(n0))); };
+    return h('div', { class: 'grid', style: { gap: '22px' } },
+      h('div', { class: 'hello' }, h('span', { class: 'cap', style: { fontSize: '14px' } }, 'Alleen bedrijven uit je cockpit'), h('h1', null, 'Earnings'), h('p', null, `${met.length} bedrijven hebben een datum. ${week.length ? week.length + ' daarvan rapporteren binnen een week.' : ''}`)),
+      h('div', { class: 'grid g3' },
+        tile('Deze week', String(week.length), h('div', { style: { display: 'flex', gap: '6px', flexWrap: 'wrap' } }, week.map((r) => h('span', { class: 'chip gloss' }, r.ticker))), 'binnen 7 dagen'),
+        tile('Uit je portefeuille', String(eigen.length), h('div', { style: { display: 'flex', gap: '6px', flexWrap: 'wrap' } }, eigen.map((r) => h('span', { class: 'chip gloss' }, r.ticker + ' · ' + datum(r.volgendeEarnings).replace(/ \d{4}$/, '')))), 'met een bekende datum'),
+        tile('Nog geen datum', String(zonder.length), h('div', { style: { display: 'flex', gap: '6px', flexWrap: 'wrap' } }, zonder.map((r) => h('span', { class: 'chip gloss' }, r.ticker))), 'net gerapporteerd of nog niet aangekondigd')),
+      Object.entries(groepen).map(([mnd, list]) => card(maandNaam(mnd).replace(/^./, (c) => c.toUpperCase()), list.length + ' bedrijven', h('div', null, list.map(rij)))),
+      h('p', { class: 'cap', style: { margin: 0 } }, 'Datums en verwachtingen komen van Yahoo Finance; een datum kan een schatting zijn tot het bedrijf hem bevestigt. Verwachte winst en omzet in de rapportagevaluta van het bedrijf.'));
+  }
+
+  // ---------- ETF'S ----------
+  function viewEtfs() {
+    return h('div', { class: 'grid', style: { gap: '22px' } },
+      h('div', { class: 'hello' }, h('span', { class: 'cap', style: { fontSize: '14px' } }, 'Voor je kern van ' + D.mk.doelEtf + '%'), h('h1', null, 'ETF\'s'), h('p', null, 'Spreiding meet of een ETF je huidige overwegingen in de VS, Big Tech en sectoren verkleint, en hoe weinig hij meebeweegt met wat je al hebt.')),
+      h('div', { class: 'grid g3' }, D.etfs.map((e) => h('section', { class: 'glass card' },
+        h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px' } },
+          h('div', null, h('div', { style: { display: 'flex', gap: '8px', alignItems: 'center' } }, h('span', { class: 'mono cap' }, '#' + e.rang), h('b', { style: { fontSize: '22px' } }, e.code)), h('div', { class: 'cap' }, e.naam)),
+          h('div', { class: 'score-ball gloss' }, n(e.etfScore))),
+        h('div', { style: { display: 'flex', gap: '8px', flexWrap: 'wrap' } }, e.weging > 0 ? h('span', { class: 'pill gloss s-acc' }, 'In bezit · ' + pp(e.weging)) : null, h('span', { class: 'pill gloss s-mut' }, e.uitkerend)),
+        h('div', { style: { display: 'grid', gap: '9px' } }, [['sFit', 'Spreiding'], ['sKosten', 'Kosten'], ['sWaarde', 'Waardering']].map(([k, l]) => h('div', { class: 'prow', style: { gridTemplateColumns: '6.5rem minmax(0,1fr) 2.4rem' } }, h('span', { class: 'muted' }, l), track(e[k] ?? 0, 100, 'fill-acc'), h('span', { class: 'v' }, n(e[k]))))),
+        rows([['Kosten (TER)', pp(e.ter, 2)], ['Koers/winst', n(e.kw, 1)], ['Aandeel VS', e.aandeelVS + '%'], ['Big Tech & AI', pp(e.themaPct)], ['Samenhang met je portefeuille', n(e.correlatie, 2)], ['Rendement 12 mnd', pct(e.rendement1j, 1, true)]])))),
+      h('p', { class: 'cap', style: { margin: 0 } }, 'Aandeel VS en kosten volgens de factsheets (benadering); koers/winst van de ETF of zijn Amerikaanse tegenhanger. Big Tech & AI = gewicht van die namen in de top-10 van de ETF.'));
+  }
+
+  // ---------- PORTEFEUILLE ----------
+  function viewPortefeuille() {
+    const C = 2 * Math.PI * 90; let acc = 0;
+    const segs = D.portfolio.map((p) => { const len = p.weging / 100 * C; const s = h('circle', { cx: 120, cy: 120, r: 90, fill: 'none', 'stroke-width': 34, 'stroke-dasharray': `${Math.max(0, len - 2.5)} ${C - len + 2.5}`, 'stroke-dashoffset': -acc, style: { stroke: posKleur(p) } }); acc += len; return s; });
+    const etfPct = D.mk.etfPct;
+    const max = Math.max(...D.blootstelling.map((b) => Math.max(b.portefeuille, b.wereld)));
+    return h('div', { class: 'grid', style: { gap: '22px' } },
+      h('div', { class: 'hello' }, h('span', { class: 'cap', style: { fontSize: '14px' } }, 'Weging uit getquin, in procenten'), h('h1', null, 'Portefeuille')),
+      h('div', { class: 'grid split' },
+        h('section', { class: 'glass card' }, h('div', { class: 'card-h' }, h('h2', null, 'Je posities'), h('span', { class: 'cap' }, D.portfolio.length + ' posities')),
+          h('div', { style: { display: 'flex', gap: '28px', alignItems: 'center', flexWrap: 'wrap' } },
+            h('svg', { width: 240, height: 240, viewBox: '0 0 240 240', role: 'img', 'aria-label': 'Verdeling van je posities', style: { flex: 'none', maxWidth: '100%' } }, h('g', { transform: 'rotate(-90 120 120)' }, segs),
+              h('text', { x: 120, y: 116, 'text-anchor': 'middle', 'font-size': 32, 'font-weight': 600, style: { fill: 'var(--fg)' } }, `${Math.round(etfPct)} / ${Math.round(100 - etfPct)}`),
+              h('text', { x: 120, y: 140, 'text-anchor': 'middle', 'font-size': 13, style: { fill: 'var(--fg3)' } }, 'ETF / aandelen')),
+            h('div', { style: { flex: 1, minWidth: '240px' } }, D.portfolio.map((p) => {
+              const r = D.byT[p.code];
+              return h('button', { class: 'plainbtn', onclick: () => r ? openSheet(p.code) : go('etfs'), style: { cursor: 'pointer', display: 'grid', gridTemplateColumns: '12px 64px minmax(0,1fr) 54px 36px', gap: '10px', alignItems: 'center', padding: '9px 0', borderTop: '1px solid var(--line)', width: '100%', boxSizing: 'border-box', fontSize: '14px' } },
+                h('span', { style: { width: '10px', height: '10px', borderRadius: '3px', background: posKleur(p) } }), h('b', { style: { fontWeight: 600 } }, p.code), h('span', { class: 'cap', style: { overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' } }, p.type === 'ETF' ? 'ETF' : p.sector), h('span', { class: 'mono', style: { textAlign: 'right' } }, pp(p.weging)), h('span', { class: 'chip gloss', style: { textAlign: 'center', fontSize: '12px' } }, n(p.score)));
+            })))),
+        h('div', { class: 'grid', style: { gap: '18px', alignContent: 'start' } },
+          tile('ETF-kern', pp(D.mk.etfPct), track(D.mk.etfPct, 100, 'fill-acc', D.mk.doelEtf), 'Doel ' + D.mk.doelEtf + '%'),
+          tile('Big Tech & AI', pp(D.mk.themaPct), track(D.mk.themaPct, 100, 'fill-warn', D.mk.themaPlafond), 'Plafond ' + D.mk.themaPlafond + '%'),
+          tile('Aandeel VS', pp(D.mk.aandeelVS), track(D.mk.aandeelVS, 100, 'fill-cool', D.mk.wereldVS), 'Wereldindex ' + D.mk.wereldVS + '%'))),
+      stressCard(),
+      card('Sectoren: jij tegenover de wereld', 'inclusief wat je via ETF\'s bezit · wereld = Vanguard Total World',
+        h('div', { style: { display: 'flex', gap: '16px' }, class: 'cap' }, h('span', null, h('span', { style: { color: 'var(--accent)' } }, '● '), 'jij'), h('span', null, h('span', { style: { color: 'var(--fg3)' } }, '● '), 'wereld')),
+        h('div', { style: { display: 'grid', gap: '12px' } }, D.blootstelling.map((b) => {
+          const d = b.portefeuille - b.wereld, s = (v) => (v / max * 100) + '%';
+          return h('div', { style: { display: 'grid', gridTemplateColumns: '11rem minmax(0,1fr) 4.5rem', gap: '14px', alignItems: 'center', fontSize: '14px' } },
+            h('span', { class: 'muted' }, b.sector),
+            h('div', { style: { position: 'relative', height: '16px' } },
+              h('div', { style: { position: 'absolute', top: '7px', height: '2px', background: 'var(--line)', left: s(Math.min(b.portefeuille, b.wereld)), width: `calc(${s(Math.max(b.portefeuille, b.wereld))} - ${s(Math.min(b.portefeuille, b.wereld))})` } }),
+              h('div', { style: { position: 'absolute', top: '3px', width: '10px', height: '10px', borderRadius: '50%', background: 'var(--fg3)', left: s(b.wereld), marginLeft: '-5px' } }),
+              h('div', { class: 'gloss', style: { position: 'absolute', top: '0', width: '16px', height: '16px', borderRadius: '50%', background: 'var(--accent)', left: s(b.portefeuille), marginLeft: '-8px' } })),
+            h('span', { class: 'mono ' + (d > 3 ? 's-warn' : d < -3 ? 's-cool' : 'cap'), style: { textAlign: 'right' } }, (d >= 0 ? '+' : '−') + n(Math.abs(d), 1)));
+        }))));
+  }
+
+  function stressCard() {
+    const mk = D.mk;
+    const scen = [['Milde dip: markt −10%', 'betaSPY', -.10], ['Correctie: markt −20%', 'betaSPY', -.20], ['Tech-correctie: Nasdaq −30%', 'betaQQQ', -.30]];
+    const res = scen.map(([l, k, s]) => ({ l, s, d: D.portfolio.reduce((acc, p) => acc + (p.weging / 100) * (p[k] ?? 1) * s, 0), top: D.portfolio.map((p) => ({ c: p.code, v: (p.weging / 100) * (p[k] ?? 1) * s })).sort((a, b) => a.v - b.v).slice(0, 3) }));
+    return h('div', { class: 'grid g2' },
+      card('Stresstest', 'geschat met de bèta van elke positie over 2 jaar weekrendementen',
+        h('div', null, res.map((x) => h('div', { class: 'scen' }, h('div', null, h('b', null, x.l), h('div', { class: 'cap' }, 'Grootste bijdrage: ' + x.top.map((t) => t.c + ' ' + pct(t.v, 1)).join(', '))), h('span', { class: 'big s-bad', style: { fontSize: '24px', textAlign: 'right' } }, pct(x.d, 0))))),
+        h('span', { class: 'cap' }, 'Een schatting op basis van hoe je posities in het verleden meebewogen. ETF-bèta\'s zijn in euro gemeten en bevatten dus ook het effect van de dollarkoers.')),
+      card('Spreiding in cijfers', null,
+        rows([['Effectief aantal posities', n(mk.effectiefAantal, 1) + ' van ' + D.portfolio.length], ['Gemiddelde samenhang tussen posities', n(mk.gemSamenhang, 2)], ['Bèta t.o.v. S&P 500', n(mk.betaSPY, 2)], ['Bèta t.o.v. Nasdaq-100', n(mk.betaQQQ, 2)], ['Beweeglijkheid per jaar', pct(mk.vol1j, 0)]]),
+        h('span', { class: 'cap' }, 'Effectief aantal = hoeveel even grote, losse posities je spreiding waard is. Hoe lager de samenhang, hoe beter je posities elkaar opvangen.')));
+  }
+
+  // ---------- LOGBOEK ----------
+  function viewLogboek() {
+    const L = D.beslissingen;
+    return h('div', { class: 'grid', style: { gap: '22px' } },
+      h('div', { class: 'hello' }, h('span', { class: 'cap', style: { fontSize: '14px' } }, 'Je maandaankopen en hoe ze het doen'), h('h1', null, 'Logboek'), h('p', null, 'Elke aankoop met de reden, en het rendement sindsdien tegenover de wereldindex (VWCE). Zo zien we welke regels werken.')),
+      L.length ? h('section', { class: 'glass card' }, h('div', { class: 'tbl' }, h('table', null,
+        h('thead', null, h('tr', null, ['Maand', 'Keuze', 'Reden', 'Rendement', 'VWCE', 'Verschil'].map((l, i) => h('th', { class: i > 2 ? 'r' : '' }, l)))),
+        h('tbody', null, L.map((b) => h('tr', null, h('td', null, maandNaam(b.maand)), h('td', null, h('b', null, b.keuze), ' ', h('span', { class: 'cap' }, b.type || '')), h('td', { style: { whiteSpace: 'normal', maxWidth: '360px' } }, b.reden || ''), h('td', { class: 'r mono' }, pct(b.rendement, 1, true)), h('td', { class: 'r mono' }, pct(b.benchmark, 1, true)), h('td', { class: 'r mono ' + (b.verschil > 0 ? 's-ok' : b.verschil < 0 ? 's-bad' : '') }, pct(b.verschil, 1, true))))))))
+      : h('section', { class: 'glass card empty' },
+          h('svg', { width: 44, height: 44, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', 'stroke-width': 1.6, 'stroke-linecap': 'round', style: { color: 'var(--accent)' }, 'aria-hidden': 'true' }, h('path', { d: 'M5 4h11l3 3v13H5z' }), h('path', { d: 'M9 10h6M9 14h6' })),
+          h('h2', { style: { margin: 0, fontSize: '20px' } }, 'Nog geen aankopen vastgelegd'),
+          h('p', { class: 'cap', style: { maxWidth: '46ch', margin: 0, fontSize: '14px', lineHeight: 1.55 } }, 'Vertel Claude na je aankoop wat je kocht en waarom. Dan verschijnt hij hier en volgt de cockpit elke maand hoe die keuze het doet.')));
+  }
+
+  function modelCard() {
+    const H = D.historie, dates = [...new Set(H.map((x) => x.datum))].sort();
+    let toets = null;
+    if (dates.length > 1) {
+      const d0 = dates[0], start = H.filter((x) => x.datum === d0).sort((a, b) => b.koopscore - a.koopscore);
+      const ret = (x) => { const nu = D.byT[x.ticker]; return nu ? nu.koers / x.koers - 1 : null; };
+      const avgR = (l) => { const v = l.map(ret).filter(has); return v.length ? v.reduce((a, b) => a + b, 0) / v.length : null; };
+      toets = { d0, top: avgR(start.slice(0, 5)), bodem: avgR(start.slice(-5)) };
+    }
+    const kritiek = [
+      ['Absolute grenzen per kengetal', 'Een supermarkt als Costco heeft bewust lage marges. Daarom is er nu een vergelijking met sectorgenoten in elk detailpaneel.'],
+      ['Koersdoelen van analisten zijn vaak te optimistisch', 'Ze wegen maar beperkt mee (verwachtingen 10%) en de prognosegrafiek toont de hele bandbreedte.'],
+      ['De DCF rekent met winst in plaats van kasstroom', 'Daarom staat de check "kasstroom minstens 60% van de winst" erin, die zware investeerders (Amazon, Meta) afvangt.'],
+      ['Alleen tegendraadse timing kan vallende messen belonen', 'Timing combineert nu angst met 12-maands momentum, de factor met het sterkste historische bewijs.'],
+      ['Eenmalige winsten vertekenen groei', 'Winstgroei met een duidelijke eenmalige post telt niet mee (Amazon, Alphabet, Salesforce).'],
+      ['Gratis data heeft gaten', 'Elk aandeel toont zijn datakwaliteit; ontbrekende kwartalen vullen we aan uit de Earnings Reviewer.'],
+      ['Het model is nooit getoetst', 'Vanaf nu wordt elke meting bewaard. Zo zien we of hoge koopscores het echt beter doen dan lage.'],
+    ];
+    return card('Modelcontrole', 'eerlijk over de zwakke plekken',
+      h('div', null, kritiek.map(([a, b]) => h('div', { class: 'row', style: { display: 'grid', gridTemplateColumns: 'minmax(0,1fr) minmax(0,1.4fr)', gap: '16px' } }, h('span', { style: { color: 'var(--fg)', fontWeight: 500 } }, a), h('span', { style: { fontFamily: 'var(--font)', textAlign: 'left', color: 'var(--fg2)' } }, b)))),
+      toets ? h('div', { class: 'verdict gloss' }, h('p', { class: 'k' }, 'Toets sinds ' + datum(toets.d0)), h('p', { style: { margin: 0 } }, `Top 5 koopscores: ${pct(toets.top, 1, true)} · laagste 5: ${pct(toets.bodem, 1, true)}`))
+        : h('div', { class: 'verdict gloss' }, h('p', { class: 'k' }, 'Meting gestart op ' + datum(dates[0])), h('p', { style: { margin: 0, lineHeight: 1.55 } }, 'Na de volgende update vergelijkt de cockpit hoe de 5 hoogste koopscores het doen tegenover de 5 laagste. Na een paar maanden weten we of het model echt waarde toevoegt.')));
+  }
+
+  // ---------- STRATEGIE ----------
+  function viewStrategie() {
+    const s = D.st;
+    return h('div', { class: 'grid', style: { gap: '22px' } },
+      h('div', { class: 'hello' }, h('span', { class: 'cap', style: { fontSize: '14px' } }, 'Samen vastgesteld op ' + datum(s.vastgesteld)), h('h1', null, 'Je strategie')),
+      h('div', { class: 'grid g4' },
+        tile('Kern / satelliet', `${s.doelEtf} / ${100 - s.doelEtf}`, track(s.doelEtf, 100, 'fill-acc'), 'ETF / losse aandelen'),
+        tile('Max per aandeel', s.maxPerAandeel + '%', track(s.maxPerAandeel, 100, 'fill-acc'), 'van je totale portefeuille'),
+        tile('Aantal aandelen', `${s.aantalMin}–${s.aantalMax}`, track(s.aantalMax, 30, 'fill-ok', s.aantalMin), 'doel op termijn'),
+        tile('Plafond Big Tech & AI', s.themaPlafond + '%', track(s.themaPlafond, 100, 'fill-warn'), 'inclusief via ETF\'s')),
+      h('div', { class: 'grid g2' },
+        card('Regels', null, rows([['Beslisregel', s.beslisregel], ['Marge voor de kern', s.marge + ' punt'], ['Koopcheck: minimaal', s.minChecks + ' van 12 checks'], ['Koopcheck: bedrijfsscore', 'minstens ' + s.minBedrijfsscore], ['Horizon', s.horizon]])),
+        card('Hoe de koopscore werkt', null, h('div', { class: 'case', style: { display: 'grid', gap: '10px' } },
+          h('p', null, h('b', null, 'Kwaliteit 25% '), 'marges, ROIC, kasstroom, schuld, margetrend en verwatering.'),
+          h('p', null, h('b', null, 'Groei 20% '), 'omzetgroei en verwachte omzet- en winstgroei.'),
+          h('p', null, h('b', null, 'Waardering 25% '), 'k/w, PEG, kasstroomrendement, EV/EBITDA, eigen historie, reverse DCF en veiligheidsmarge.'),
+          h('p', null, h('b', null, 'Verwachtingen 10% '), 'consensus, koersdoel, bijstellingen en verslagen verwachtingen.'),
+          h('p', null, h('b', null, 'Timing 5% en portfolio-fit 15% '), 'angst scoort hoger dan hebzucht; fit kijkt naar sector, regio, thema, samenhang en weging.')))),
+      modelCard(),
+      card('Databronnen', 'stand van ' + datum(D.mk.datum),
+        h('div', null, D.bronnen.map((b) => h('div', { style: { display: 'grid', gridTemplateColumns: '14px minmax(0,1fr) auto', gap: '12px', alignItems: 'center', padding: '11px 0', borderTop: '1px solid var(--line)' } },
+          h('span', { style: { width: '9px', height: '9px', borderRadius: '50%', background: b.status === 'ok' ? 'var(--ok-fill)' : b.status === 'deels' ? 'var(--warn-fill)' : 'var(--bad)' } }),
+          h('span', null, h('b', { style: { fontWeight: 500 } }, b.bron), h('div', { class: 'cap' }, b.wat + (b.noot ? ' · ' + b.noot : ''))),
+          h('span', { class: 'mono cap' }, b.aantal + ' / ' + b.van))))),
+      card('Intrinsieke waarde en reverse DCF', null, h('div', { class: 'case', style: { display: 'grid', gap: '10px' } },
+        h('p', null, 'De intrinsieke waarde gaat uit van de verwachte winst volgend jaar, twee jaar groei op het verwachte tempo (maximaal 20%) en daarna in zeven jaar terug naar 3%, verdisconteerd tegen 9% per jaar. Het voorzichtige scenario halveert de groei bij 10% rendementseis, het optimistische rekent met 1,25× de groei bij 8,5%.'),
+        h('p', null, 'De reverse DCF draait het om: welke jaarlijkse groei zit al in de koers? Ligt die onder wat analisten verwachten, dan ligt de lat laag. Beide zijn modelschattingen en geen koersdoel.'))));
+  }
+  // ---------- AI-CHAT ----------
+  function md(text) {
+    const frag = document.createDocumentFragment(); let ul = null;
+    const inline = (str) => str.split(/(\*\*[^*]+\*\*)/g).filter(Boolean).map((p) => p.startsWith('**') && p.endsWith('**') ? h('b', null, p.slice(2, -2)) : p);
+    for (const raw of text.split('\n')) {
+      const line = raw.trim();
+      if (/^[-*•] /.test(line)) { if (!ul) { ul = h('ul'); frag.append(ul); } ul.append(h('li', null, inline(line.slice(2)))); continue; }
+      ul = null; if (!line) continue;
+      frag.append(h('p', null, inline(line.replace(/^#+\s*/, ''))));
+    }
+    return frag;
+  }
+  const compact = (r) => ({ ticker: r.ticker, naam: r.naam, status: r.status, weging: r.weging, sector: r.sector, land: r.land, valuta: r.valuta, koers: r.koers, koopscore: r.koopscore, bedrijfsscore: r.bedrijfsscore, koopcheck: r.koopcheck, checks: r.checksOk, rodeVlaggen: r.rodeVlaggen, signaal: r.signaal, fearGreed: r.fg, veiligheidsmarge: r.veiligheidsmarge, fwdPE: r.fwdPE, upside: r.upside, volgendeEarnings: r.volgendeEarnings });
+  async function initChat() {
+    const c = window.claude; if (!c || typeof c.use !== 'function') return;
+    let sample = null; try { sample = await c.use('sample'); } catch (e) { sample = null; }
+    if (!sample) return;
+    let toolsOk = false; try { toolsOk = !!(await sample.limits()).tools; } catch (e) {}
+    const turns = []; let ctl = null, busy = false;
+    const msgs = h('div', { class: 'msgs', 'aria-live': 'polite' });
+    const input = h('textarea', { id: 'ck-chat-input', rows: 1, placeholder: 'Stel een vraag over je aandelen…', 'aria-label': 'Je vraag' });
+    const sendBtn = h('button', { class: 'btn', style: { padding: '11px 16px' } }, 'Vraag');
+    const sugs = h('div', { class: 'sugs' }, ['Waarom wordt het deze maand een ETF?', 'Vergelijk Visa en Mastercard', 'Wat betekent reverse DCF?', 'Welke kandidaten helpen mijn spreiding het meest?'].map((q) => h('button', { class: 'sug gloss', onclick: () => ask(q) }, q)));
+    const panel = h('section', { class: 'chat glass', role: 'dialog', 'aria-label': 'Vraag het Claude', hidden: true },
+      h('div', { class: 'chat-h' }, h('div', null, h('div', { style: { fontWeight: 600, fontSize: '17px' } }, 'Vraag het Claude'), h('div', { class: 'cap' }, 'Antwoordt met de data uit je cockpit')),
+        h('button', { class: 'close gloss', 'aria-label': 'Chat sluiten', onclick: () => { panel.hidden = true; fab.hidden = false; } }, h('svg', { width: 14, height: 14, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', 'stroke-width': 2.4, 'stroke-linecap': 'round', 'aria-hidden': 'true' }, h('path', { d: 'M6 6l12 12M18 6L6 18' })))),
+      msgs, sugs, h('div', { class: 'composer' }, input, sendBtn));
+    const fab = h('button', { class: 'fab', onclick: () => { panel.hidden = false; fab.hidden = true; input.focus(); } },
+      h('svg', { width: 18, height: 18, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', 'stroke-width': 2, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'aria-hidden': 'true' }, h('path', { d: 'M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z' })), 'Vraag Claude');
+    document.body.append(fab, panel);
+    msgs.append(h('div', { class: 'msg a glass' }, md('Hoi Juup. Vraag me alles over de aandelen, ETF\'s en je portefeuille in deze cockpit. Ik gebruik de cijfers van ' + datum(D.mk.datum) + '.')));
+    input.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); ask(input.value); } });
+    sendBtn.addEventListener('click', () => busy ? ctl && ctl.abort() : ask(input.value));
+    const lijst = () => D.aandelen.map((r) => [r.ticker, r.naam, r.status, 'koopscore ' + r.koopscore, r.koopcheck, r.signaal, 'F&G ' + r.fg, r.weging ? 'weging ' + r.weging + '%' : ''].join(' | ')).join('\n');
+    const rules = () => [
+      'Je bent de assistent in Juup\'s Aandelen Cockpit, een persoonlijke analyse-app. Juup is 19, belegt maandelijks voor de lange termijn (10+ jaar) en beslist zelf.',
+      'Antwoord in het Nederlands, helder en kort (meestal 80 tot 180 woorden), met concrete cijfers uit de data. Gebruik korte alinea\'s, opsommingen met "- " en **vet** voor kernpunten. Geen tabellen of koppen.',
+      'Verzin geen cijfers. Staat iets niet in de data, zeg dat en leg eventueel algemeen uit hoe het zit (algemene kennis tot je trainingsdatum, als zodanig benoemd).',
+      'Geef geen persoonlijk koop- of verkoopadvies. Leg uit wat de data en Juup\'s eigen regels zeggen; de keuze ligt bij Juup.',
+      toolsOk ? 'Haal details op met de tools (aandeel_details, portefeuille, ontwikkelingen, etfs, earnings) voordat je over een specifiek aandeel of de portefeuille iets beweert.' : '',
+      'Begrippen: koopscore = kwaliteit 25%, groei 20%, waardering 25%, verwachtingen 10%, timing 5%, portfolio-fit 15%. Koopcheck = 12 harde regels plus rode vlaggen. Veiligheidsmarge = DCF-waarde t.o.v. koers. Reverse DCF = groei die de koers inprijst. Fear & Greed 0-100 per aandeel.',
+      `Strategie: ${D.st.doelEtf}% ETF / ${100 - D.st.doelEtf}% losse aandelen, max ${D.st.maxPerAandeel}% per aandeel, ${D.st.aantalMin}-${D.st.aantalMax} aandelen, plafond Big Tech & AI ${D.st.themaPlafond}%, regel: ${D.st.beslisregel}.`,
+      `Maandkeuze ${D.mk.maand}: ${D.mk.besluit}, keuze ${D.mk.keuze} (${D.mk.keuzeNaam}). ETF-deel ${D.mk.etfPct}%, VS ${D.mk.aandeelVS}% (wereld ${D.mk.wereldVS}%), Big Tech ${D.mk.themaPct}%. Kandidaten: ${[D.mk.kandidaat1, D.mk.kandidaat2, D.mk.kandidaat3].filter(Boolean).join(', ')}.`,
+      'Alle aandelen in de cockpit:\n' + lijst(),
+      'Posities (weging %): ' + D.portfolio.map((p) => p.code + ' ' + p.weging).join(', '),
+      openTicker ? 'Juup bekijkt nu het detailpaneel van ' + openTicker + '.' : '',
+    ].filter(Boolean).join('\n\n');
+    const tools = [
+      { name: 'aandeel_details', description: 'Alle kengetallen, scores, koopcheck-uitkomsten, analyse (kern, bull, bear, ontwikkelingen) en recente nieuwskoppen van één aandeel uit de cockpit. Geef de ticker zoals in de lijst (bijv. META, MC.PA).', inputSchema: { type: 'object', properties: { ticker: { type: 'string' } }, required: ['ticker'] },
+        execute: (inp) => { const t = String(inp.ticker || '').toUpperCase(); const r = D.byT[t]; if (!r) throw new Error('Onbekende ticker ' + t + '. Kies uit: ' + Object.keys(D.byT).join(', '));
+          const { koersVs200d, rsi14, pos52w, rs3m, volRatio, shortChange, ...rest } = r;
+          return { ...rest, verhaal: D.vh[t] || null, ontwikkelingen: themaVoor(t).map((v) => ({ titel: v.titel, samenvatting: v.samenvatting, rol: v.betrokken.find((b) => b.ticker === t) })), kwartaalcijfers: D.financien.filter((f) => f.ticker === t).slice(0, 8), analyse: D.an[t] || null, checks: D.checks.filter((c) => c.ticker === t).map((c) => c.soort + ': ' + c.regel + ' = ' + (c.uitkomst ?? 'onbekend')), nieuws: D.nieuws.filter((x) => x.ticker === t).slice(0, 5).map((x) => x.datum + ' ' + x.titel), analistenacties: D.acties.filter((x) => x.ticker === t).slice(0, 4) }; } },
+      { name: 'portefeuille', description: 'Juup\'s posities met weging, de sectorverdeling tegenover de wereldindex en de maandkeuze.', execute: () => ({ posities: D.portfolio, sectoren: D.blootstelling, maandkeuze: D.mk }) },
+      { name: 'ontwikkelingen', description: 'De samenhangende thema\'s van deze maand (bijv. AI-bouwgolf, luxedip) met welke bedrijven positief of negatief geraakt worden en waarom.', execute: () => D.vb },
+      { name: 'etfs', description: 'De vergeleken ETF\'s met score, kosten, aandeel VS, Big Tech-gewicht en samenhang met de portefeuille.', execute: () => D.etfs },
+      { name: 'earnings', description: 'Komende kwartaalcijfers van bedrijven in de cockpit met datum en verwachtingen.', execute: () => D.aandelen.filter((r) => r.volgendeEarnings).map((r) => ({ ticker: r.ticker, datum: r.volgendeEarnings, epsVerwacht: r.epsVerwacht, omzetVerwachtMld: r.omzetVerwachtMld, vorigeVerrassing: r.laatsteVerrassing })) },
+    ];
+    async function ask(q) {
+      q = String(q || '').trim(); if (!q || busy) return;
+      sugs.hidden = true; input.value = '';
+      msgs.append(h('div', { class: 'msg u' }, q));
+      const bubble = h('div', { class: 'msg a glass' }, h('span', { class: 'typing' }, 'Even nadenken…'));
+      msgs.append(bubble); msgs.scrollTop = msgs.scrollHeight;
+      turns.push({ role: 'user', content: q });
+      while (turns.length > 12) turns.shift();
+      busy = true; sendBtn.textContent = 'Stop'; ctl = new AbortController();
+      try {
+        const opts = { cache: false, signal: ctl.signal, onText: ({ text }) => { bubble.replaceChildren(md(text)); msgs.scrollTop = msgs.scrollHeight; } };
+        if (toolsOk) opts.tools = tools.map((t) => ({ ...t, execute: (inp) => { bubble.firstChild && bubble.firstChild.classList && bubble.firstChild.classList.contains('typing') && (bubble.firstChild.textContent = 'Gegevens bekijken…'); return t.execute(inp); } }));
+        const { text } = await sample([{ role: 'user', content: rules() }, ...turns], opts);
+        bubble.replaceChildren(md(text)); turns.push({ role: 'assistant', content: text });
+      } catch (e) {
+        const keep = e && e.text; bubble.replaceChildren(keep ? md(keep) : document.createTextNode(''));
+        const msg = { not_granted: 'Je hebt Claude in deze app niet toegestaan. Dat kan via het Permissions-menu van de pagina.', rate_limited: 'Even te veel vragen achter elkaar. Probeer het zo opnieuw.', cancelled: 'Gestopt.', sampling_disabled: 'Claude is niet beschikbaar voor dit account.', refused: 'Daar kan ik niet op antwoorden. Probeer de vraag anders te stellen.' }[e && e.code] || 'Er ging iets mis bij het ophalen van het antwoord. Probeer het opnieuw.';
+        bubble.append(h('p', { class: 'cap' }, msg));
+        if (e && (e.code === 'not_granted' || e.code === 'sampling_disabled')) { fab.remove(); }
+        turns.pop();
+      } finally { busy = false; sendBtn.textContent = 'Vraag'; msgs.scrollTop = msgs.scrollHeight; }
+    }
+  }
+})();
+</script>
+
+</body>
+</html>
