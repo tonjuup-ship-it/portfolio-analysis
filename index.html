@@ -201,10 +201,13 @@ ul.ontw { margin: 0; padding-left: 1.1rem; display: grid; gap: 8px; line-height:
 .composer textarea { flex: 1; resize: none; font: inherit; font-size: 15px; color: var(--fg); background: var(--glass); border: 1px solid var(--glass-border); border-radius: 18px; padding: 10px 14px; max-height: 120px; min-height: 44px; }
 .typing { color: var(--fg3); font-size: 14px; }
 /* kalender */
-.cal-row { display: grid; grid-template-columns: 64px minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) 120px; gap: 14px; align-items: center; padding: 12px 6px; border-top: 1px solid var(--line); width: 100%; box-sizing: border-box; }
+.cal-row { display: grid; grid-template-columns: 64px minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) 120px; gap: 14px; align-items: center; padding: 12px 6px; border-top: 1px solid var(--line); width: 100%; box-sizing: border-box; }
 .cal-day { width: 56px; height: 60px; border-radius: 16px; display: grid; place-items: center; align-content: center; line-height: 1.05; }
 .cal-day b { font-size: 22px; font-weight: 600; } .cal-day span { font-size: 11px; color: var(--fg3); text-transform: uppercase; letter-spacing: .05em; }
 @media (max-width: 860px) { .cal-row { grid-template-columns: 64px minmax(0, 1fr) 110px; } .cal-row .opt2 { display: none; } }
+.mtiles { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 1fr)); }
+.mtile { padding: 14px 16px; border-radius: 20px; display: grid; gap: 4px; align-content: start; }
+.mtile .big { font-size: 22px; }
 .foot { text-align: center; font-size: 12px; color: var(--fg3); max-width: 70ch; margin: 0 auto; line-height: 1.5; }
 .lock { max-width: 420px; margin: 60px auto; padding: 36px 34px; display: grid; gap: 16px; text-align: center; justify-items: center; }
 .lock input[type=password] { font: inherit; font-size: 16px; width: 100%; color: var(--fg); background: var(--glass); border: 1px solid var(--glass-border); border-radius: 14px; padding: 12px 16px; }
@@ -307,7 +310,7 @@ ul.ontw { margin: 0; padding-left: 1.1rem; display: grid; gap: 8px; line-height:
   });
 
   // ---------- data ----------
-  const FILES = ['bronnen', 'financien', 'historie', 'verbanden', 'verhaal', 'aandelen', 'koersen', 'acties', 'nieuws', 'markt', 'analyse', 'checks', 'etfs', 'portfolio', 'blootstelling', 'maandkeuze', 'strategie', 'beslissingen'];
+  const FILES = ['macro', 'insiders', 'beleggers', 'earningsmoves', 'kpi', 'bronnen', 'financien', 'historie', 'verbanden', 'verhaal', 'aandelen', 'koersen', 'acties', 'nieuws', 'markt', 'analyse', 'checks', 'etfs', 'portfolio', 'blootstelling', 'maandkeuze', 'strategie', 'beslissingen'];
   let D = null;
   const b64 = (str) => Uint8Array.from(atob(str), (c) => c.charCodeAt(0));
   const toB64 = (buf) => btoa(String.fromCharCode(...new Uint8Array(buf)));
@@ -454,6 +457,7 @@ ul.ontw { margin: 0; padding-left: 1.1rem; display: grid; gap: 8px; line-height:
         h('section', { class: 'glass card' }, h('span', { class: 'cap' }, 'Koopcheck'), h('span', { class: 'big' }, String(geslaagd), h('span', { class: 'cap', style: { fontSize: '15px', fontWeight: 400 } }, ' van ' + D.aandelen.length + ' geslaagd')),
           h('div', { style: { display: 'flex', gap: '4px', flexWrap: 'wrap' } }, D.aandelen.map((r, i) => h('span', { title: r.ticker, style: { width: '14px', height: '14px', borderRadius: '5px', background: r.koopcheck !== 'Geslaagd' ? 'var(--track)' : kand.includes(r) || (mk.aantalGeslaagd && r.thema !== 'Big Tech & AI') ? 'var(--ok-fill)' : 'var(--ok-soft)' } }))),
           h('span', { class: 'cap' }, mk.aantalGeslaagd + ' passen ook binnen je plafonds'))),
+      macroStrip(),
       h('section', { class: 'glass card' }, h('div', { class: 'card-h' }, h('h2', null, 'Wat speelt er'), h('button', { class: 'btn2 gloss', onclick: () => go('ontwikkelingen') }, 'Alle ontwikkelingen')),
         h('div', { class: 'grid g3' }, D.vb.slice(0, 3).map((v) => themeMini(v)))),
       h('div', { class: 'grid split' },
@@ -603,7 +607,8 @@ ul.ontw { margin: 0; padding-left: 1.1rem; display: grid; gap: 8px; line-height:
           h('div', { style: { display: 'flex', gap: '8px', flexWrap: 'wrap' } }, pill(r.signaal), pill(r.koopcheck), h('span', { class: 'pill gloss s-mut' }, r.sector), h('span', { class: 'pill gloss s-mut' }, r.status + (r.weging ? ' · ' + pp(r.weging) : '')), h('span', { class: 'pill gloss ' + (r.dataKwaliteit >= .9 ? 's-ok' : r.dataKwaliteit >= .75 ? 's-warn' : 's-bad'), title: r.dataOntbreekt ? 'Ontbreekt: ' + r.dataOntbreekt : 'Alle kerncijfers aanwezig' }, 'Data ' + pct(r.dataKwaliteit, 0))),
           (r.dataOntbreekt || r.dataWaarschuwing) ? h('span', { class: 'cap' }, [r.dataOntbreekt ? 'Ontbreekt: ' + r.dataOntbreekt : null, r.dataWaarschuwing ? 'Let op: ' + r.dataWaarschuwing : null].filter(Boolean).join(' · ')) : null),
         h('div', { style: { display: 'flex', gap: '16px', alignItems: 'flex-start' } },
-          h('div', { style: { textAlign: 'right' } }, h('div', { class: 'big' }, usd(r.koers)), h('div', { class: 'cap' }, pct(r.rendement1m, 1, true) + ' 1 mnd · ' + pct(r.rendement1j, 1, true) + ' 12 mnd')),
+          h('div', { style: { textAlign: 'right' } }, h('div', { class: 'big' }, usd(r.koers)), h('div', { class: 'cap' }, pct(r.rendement1m, 1, true) + ' 1 mnd · ' + pct(r.rendement1j, 1, true) + ' 12 mnd'),
+            r.valuta === 'USD' && has(r.rendement1jEUR) ? h('div', { class: 'cap', title: 'Rendement voor een belegger in euro, inclusief het effect van de dollarkoers' }, 'in euro ' + pct(r.rendement1jEUR, 1, true) + ' 12 mnd · valuta ' + pct(r.valutaEffect1j, 1, true)) : null),
           h('button', { class: 'close gloss', 'aria-label': 'Sluiten', onclick: close }, h('svg', { width: 16, height: 16, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', 'stroke-width': 2.4, 'stroke-linecap': 'round', 'aria-hidden': 'true' }, h('path', { d: 'M6 6l12 12M18 6L6 18' }))))),
       prognose(ser, r),
       
@@ -643,7 +648,8 @@ ul.ontw { margin: 0; padding-left: 1.1rem; display: grid; gap: 8px; line-height:
         card3('Recente analistenacties', 'laatste 60 dagen',
           acties.length ? h('div', { class: 'tbl' }, h('table', null, h('tbody', null, acties.map((c) => h('tr', null, h('td', { class: 'cap' }, datum(c.datum)), h('td', null, c.firma), h('td', { class: 'opt' }, c.actie), h('td', null, c.oordeel), h('td', { class: 'r mono' }, has(c.doelNieuw) ? usd(c.doelNieuw) : '—')))))) : h('span', { class: 'cap' }, 'Geen acties in de laatste 60 dagen.'))),
       verhaalCard(r),
-      h('div', { class: 'grid g2' }, kwartaalCard(r), peersCard(r)),
+      h('div', { class: 'grid g2' }, kwartaalCard(r), kpiCard(r)),
+      h('div', { class: 'grid g2' }, insiderCard(r), peersCard(r)),
       verbandenCard(r),
       card3('Nieuws van de afgelopen maand', a.nieuwsSentiment ? 'sentiment: ' + a.nieuwsSentiment.toLowerCase() : null,
         h('div', { class: 'news', style: { display: 'grid', gap: '8px' } }, nieuws.map((x) => h('div', { style: { display: 'grid', gridTemplateColumns: '84px minmax(0,1fr)', gap: '10px', fontSize: '14px', paddingTop: '8px', borderTop: '1px solid var(--line)' } }, h('span', { class: 'cap' }, datum(x.datum).replace(/ \d{4}$/, '')), h('span', null, /^https:\/\//.test(x.link || '') ? h('a', { href: x.link, target: '_blank', rel: 'noopener' }, x.titel) : x.titel, h('span', { class: 'cap' }, ' · ' + x.bron)))))));
@@ -691,6 +697,22 @@ ul.ontw { margin: 0; padding-left: 1.1rem; display: grid; gap: 8px; line-height:
       h('span', { class: 'cap' }, 'De waaier toont het hoogste, gemiddelde en laagste koersdoel van analisten voor over 12 maanden. Een koersdoel is een verwachting, geen zekerheid.'));
   }
 
+  // ---------- MACRO ----------
+  const SIGCLS = { gunstig: 's-ok', 'levert rendement': 's-ok', dalend: 's-ok', normaal: 's-mut', neutraal: 's-mut', stabiel: 's-mut', gelijk: 's-mut', druk: 's-warn', stijgend: 's-warn', 'kost rendement': 's-warn', omgekeerd: 's-bad' };
+  function macroStrip() {
+    const m = D.m;
+    const fmtV = (x) => x.eenheid === '$' ? n(x.waarde, 3) : n(x.waarde, 2) + (x.eenheid === '%' ? '%' : ' pt');
+    const ch = (x) => has(x.verandering) ? (x.verandering > 0 ? '↑ ' : x.verandering < 0 ? '↓ ' : '→ ') + n(Math.abs(x.verandering), x.eenheid === '$' ? 3 : 2) + (x.id === 'ecb' || x.id === 'eurusd' ? ' in 1 jaar' : ' in 3 mnd') : '';
+    return h('section', { class: 'glass card', style: { gap: '12px' } },
+      h('div', { class: 'card-h' }, h('h2', null, 'De markt om je heen'), h('span', { class: 'cap' }, 'rente, valuta en sentiment · ECB, Yahoo en CNN')),
+      h('div', { class: 'mtiles' },
+        h('div', { class: 'mtile gloss' }, h('span', { class: 'cap' }, 'Marktsentiment (CNN)'), h('span', { class: 'big' }, n(m.cnnFg)), h('span', { class: 'pill gloss ' + fgCls(m.cnnFg), style: { justifySelf: 'start' } }, CNN[m.cnnLabel] || '')),
+        h('div', { class: 'mtile gloss' }, h('span', { class: 'cap' }, 'VIX (beweeglijkheid)'), h('span', { class: 'big' }, n(m.vix, 1)), h('span', { class: 'cap' }, 'gemiddeld ' + n(m.vixGem1j, 1))),
+        D.macro.map((x) => h('div', { class: 'mtile gloss', title: x.uitleg }, h('span', { class: 'cap' }, x.naam), h('span', { class: 'big' }, fmtV(x)),
+          h('span', { style: { display: 'flex', gap: '6px', alignItems: 'center', flexWrap: 'wrap' } }, h('span', { class: 'pill gloss ' + (SIGCLS[x.signaal] || 's-mut') }, x.signaal), h('span', { class: 'cap' }, ch(x)))))),
+      h('span', { class: 'cap' }, (D.macro.find((x) => x.id === 'eurusd') || {}).uitleg || ''));
+  }
+
   // ---------- VERHAAL, VERBANDEN, CIJFERS, PEERS ----------
   function verhaalCard(r) {
     const v = D.vh[r.ticker]; if (!v) return null;
@@ -705,7 +727,7 @@ ul.ontw { margin: 0; padding-left: 1.1rem; display: grid; gap: 8px; line-height:
         sec('Waar staat het nu', h('p', null, v.nu)),
         sec('De cijfers door de jaren', h('p', null, v.financien)),
         sec('Wat speelt er', list(v.ontwikkelingen)),
-        sec('Komende momenten', list(v.catalysts)),
+        sec('Komende momenten', list((r.volgendeEarnings ? ['Volgende cijfers: ' + datum(r.volgendeEarnings) + (has(r.verwachteBeweging) ? ' · de optiemarkt verwacht een beweging van ±' + pct(r.verwachteBeweging, 1) : '')] : []).concat(v.catalysts))),
         sec('Kansen', list(v.kansen)),
         sec('Risico\'s', list(v.risicos)),
         sec('Waardering', h('p', null, v.waardering)),
@@ -752,6 +774,33 @@ ul.ontw { margin: 0; padding-left: 1.1rem; display: grid; gap: 8px; line-height:
         h('tbody', null, rows.slice().reverse().slice(0, 5).map((x) => h('tr', null, h('td', null, soort === 'Jaar' ? x.periode.slice(0, 4) : kw(x.periode)), h('td', { class: 'r mono' }, mld(x.omzet)), h('td', { class: 'r mono ' + (x.groeiJ > 0 ? 's-ok' : x.groeiJ < 0 ? 's-bad' : '') }, pct(x.groeiJ, 0, true)), h('td', { class: 'r mono' }, pct(x.opMarge, 0)), h('td', { class: 'r mono' }, mld(x.nettowinst)), h('td', { class: 'r mono ' + (x.fcf < 0 ? 's-bad' : '') }, mld(x.fcf))))))),
       soort === 'Jaar' ? h('span', { class: 'cap' }, r.naam + ' rapporteert per halfjaar; daarom jaarcijfers.') : laatste.bron ? h('span', { class: 'cap' }, 'Laatste kwartaal uit de Earnings Reviewer; Yahoo heeft het nog niet verwerkt.') : null);
   }
+  function kpiCard(r) {
+    const K = D.kpi.filter((k) => k.ticker === r.ticker).sort((a, b) => b.datum.localeCompare(a.datum));
+    const Q = D.financien.filter((f) => f.ticker === r.ticker && f.soort === 'Q' && has(f.groeiJ));
+    const auto = [];
+    if (Q.length >= 2) { const d = Q[0].groeiJ - Q[1].groeiJ; auto.push(['Omzetgroei', pct(Q[0].groeiJ, 0, true) + ' j/j', Math.abs(d) < 0.01 ? 'stabiel' : d > 0 ? 'versnelt (' + pct(d, 0, true) + ')' : 'vertraagt (' + pct(d, 0, true) + ')', d >= 0]); }
+    const M = D.financien.filter((f) => f.ticker === r.ticker && f.soort === 'Q' && has(f.opMarge));
+    if (M.length >= 5) { const d = M[0].opMarge - M[4].opMarge; auto.push(['Operationele marge', pct(M[0].opMarge, 0), (d >= 0 ? 'hoger' : 'lager') + ' dan een jaar eerder (' + (d >= 0 ? '+' : '−') + n(Math.abs(d) * 100, 1) + ' pt)', d >= 0]); }
+    const C = D.financien.filter((f) => f.ticker === r.ticker && f.soort === 'Q' && has(f.fcf)).slice(0, 4);
+    if (C.length === 4) { const sm = C.reduce((a, b) => a + b.fcf, 0); auto.push(['Vrije kasstroom 4 kwartalen', n(sm / 1000, 1) + ' mld', sm >= 0 ? 'positief' : 'negatief', sm >= 0]); }
+    return card3('Kern-KPI\'s', 'de getallen waar het verhaal op draait',
+      auto.length ? h('div', null, auto.map(([a, b, c, ok]) => h('div', { class: 'row' }, h('span', null, a), h('span', { style: { display: 'flex', gap: '8px', alignItems: 'center', fontFamily: 'var(--font)' } }, h('b', { class: 'mono' }, b), h('span', { class: 'pill gloss ' + (ok ? 's-ok' : 's-warn') }, c))))) : null,
+      K.length ? h('div', null, K.map((k) => h('div', { class: 'chk', style: { gridTemplateColumns: 'minmax(0,1fr) auto' } },
+        h('span', null, h('b', { style: { fontWeight: 500 } }, k.kpi), h('div', { class: 'cap' }, k.periode + ' · ' + k.bron + (k.drempelTekst ? ' · doel: ' + k.drempelTekst : ''))),
+        h('span', { style: { textAlign: 'right', display: 'grid', gap: '4px', justifyItems: 'end' } }, h('span', { class: 'mono' }, k.waarde !== '—' ? k.waarde : ''), h('span', { class: 'pill gloss ' + (k.status === 'Ja' ? 's-ok' : k.status === 'Nee' ? 's-bad' : k.trend === 'down' ? 's-warn' : 's-acc') }, k.verandering)))))
+        : h('span', { class: 'cap' }, 'Nog geen bedrijfsspecifieke KPI\'s vastgelegd; die komen erbij bij de volgende kwartaalcijfers.'),
+      h('span', { class: 'cap' }, 'Bron cijfers: ' + r.cijferBron + (has(r.bronAfwijking) ? (Math.abs(r.bronAfwijking) < 0.005 ? ' · gecontroleerd: gelijk aan Yahoo' : ' · wijkt ' + pct(r.bronAfwijking, 1, true) + ' af van Yahoo') : '')));
+  }
+  function insiderCard(r) {
+    const I = D.insiders.filter((x) => x.ticker === r.ticker), B = D.beleggers.filter((x) => x.ticker === r.ticker).slice(0, 6);
+    const koop = I.filter((x) => x.soort === 'Koop').length, verk = I.filter((x) => x.soort === 'Verkoop').length;
+    const cls = { Koop: 's-ok', Verkoop: 's-warn', Toekenning: 's-mut', 'Optie-uitoefening': 's-mut', Overig: 's-mut' };
+    return card3('Insiders en grote beleggers', 'SEC Form 4 en 13F, via Yahoo',
+      h('div', { style: { display: 'flex', gap: '8px', flexWrap: 'wrap' } }, h('span', { class: 'pill gloss ' + (koop ? 's-ok' : 's-mut') }, koop + ' aankopen'), h('span', { class: 'pill gloss s-mut' }, verk + ' verkopen'), h('span', { class: 'cap' }, 'laatste 90 dagen')),
+      I.length ? h('div', null, I.slice(0, 6).map((x) => h('div', { class: 'row' }, h('span', null, h('b', { style: { fontWeight: 500, color: 'var(--fg)' } }, x.naam), h('div', { class: 'cap' }, datum(x.datum) + ' · ' + (x.functie || ''))), h('span', { style: { display: 'grid', justifyItems: 'end', gap: '4px' } }, h('span', { class: 'pill gloss ' + cls[x.soort] }, x.soort), h('span', { class: 'cap' }, has(x.waarde) && x.waarde > 0 ? '$ ' + n(x.waarde / 1e6, 2) + ' mln' : ''))))) : h('span', { class: 'cap' }, 'Geen meldingen in de laatste 90 dagen.'),
+      h('span', { class: 'cap' }, 'Verkopen door bestuurders zijn vaak routine (belasting, spreiding); aankopen met eigen geld zijn zeldzaam en daardoor het sterkere signaal.'),
+      B.length ? h('div', null, h('p', { class: 'k', style: { marginTop: '6px' } }, 'Grootste institutionele houders'), B.map((x) => h('div', { class: 'row' }, h('span', null, x.houder), h('span', null, pct(x.aandeel, 1) + ' ', h('span', { class: x.wijziging > 0 ? 's-ok' : x.wijziging < 0 ? 's-bad' : 'cap' }, has(x.wijziging) ? '(' + pct(x.wijziging, 1, true) + ')' : ''))))) : null);
+  }
   function peersCard(r) {
     const peers = D.aandelen.filter((x) => x.sector === r.sector).sort((a, b) => b.koopscore - a.koopscore);
     if (peers.length < 2) return card3('Sectorgenoten', r.sector, h('span', { class: 'cap' }, 'Geen andere bedrijven uit deze sector in de cockpit.'));
@@ -788,6 +837,16 @@ ul.ontw { margin: 0; padding-left: 1.1rem; display: grid; gap: 8px; line-height:
       h('p', { class: 'cap', style: { margin: 0 } }, 'Samengesteld door Claude uit de nieuwskoppen, kwartaalcijfers en kengetallen van deze maand. Bij twijfel weegt de data zwaarder dan het verhaal.'));
   }
 
+  function reactieCard() {
+    const R = D.earningsmoves.filter((x) => has(x.werkelijk)).slice(0, 12);
+    return card('Verwacht tegenover werkelijk', 'hoeveel beweging de optiemarkt verwachtte, en wat er gebeurde',
+      R.length ? h('div', { class: 'tbl' }, h('table', null, h('thead', null, h('tr', null, ['Aandeel', 'Cijfers', 'Verwacht', 'Werkelijk', 'Oordeel'].map((l, i) => h('th', { class: i > 1 ? 'r' : '' }, l)))),
+        h('tbody', null, R.map((x) => h('tr', { class: 'click', onclick: () => openSheet(x.ticker) }, h('td', null, h('b', null, x.ticker)), h('td', { class: 'cap' }, datum(x.datum)), h('td', { class: 'r mono' }, has(x.verwacht) ? '±' + pct(x.verwacht, 1) : '—'),
+          h('td', { class: 'r mono ' + (x.werkelijk > 0 ? 's-ok' : 's-bad') }, pct(x.werkelijk, 1, true)),
+          h('td', { class: 'r' }, h('span', { class: 'pill gloss ' + (x.verhouding > 1.2 ? 's-acc' : 's-mut') }, !has(x.verhouding) ? '—' : x.verhouding > 1.2 ? 'grote verrassing' : x.verhouding < 0.6 ? 'rustiger dan verwacht' : 'zoals verwacht')))))))
+        : h('span', { class: 'cap' }, 'De eerste vergelijkingen verschijnen na de cijfers van deze week. Vóór elke cijferdatum legt de cockpit vast welke beweging de optiemarkt inprijst; na afloop meet hij de echte koersreactie over twee handelsdagen.'));
+  }
+
   // ---------- EARNINGS ----------
   function viewKalender() {
     const vandaag = D.mk.datum, dagen = (d) => Math.round((new Date(d + 'T12:00:00') - new Date(vandaag + 'T12:00:00')) / 864e5);
@@ -802,6 +861,7 @@ ul.ontw { margin: 0; padding-left: 1.1rem; display: grid; gap: 8px; line-height:
         h('span', { style: { minWidth: 0 } }, h('b', { style: { fontSize: '16px' } }, r.ticker), ' ', h('span', { class: 'cap' }, r.naam), r.status === 'Portfolio' ? h('span', { class: 'chip gloss', style: { marginLeft: '8px', fontSize: '11px' } }, 'bezit') : null, h('div', { class: 'cap' }, r.sector)),
         h('span', { class: 'opt2' }, h('div', { class: 'cap' }, 'Verwachte winst/aandeel'), h('div', { class: 'mono' }, has(r.epsVerwacht) ? n(r.epsVerwacht, 2) : '—')),
         h('span', { class: 'opt2' }, h('div', { class: 'cap' }, 'Verwachte omzet'), h('div', { class: 'mono' }, has(r.omzetVerwachtMld) ? n(r.omzetVerwachtMld, 1) + ' mld' : '—')),
+        h('span', { class: 'opt2' }, h('div', { class: 'cap' }, 'Markt verwacht'), h('div', { class: 'mono' }, has(r.verwachteBeweging) ? '±' + pct(r.verwachteBeweging, 1) : '—')),
         h('span', { class: 'opt2' }, h('div', { class: 'cap' }, 'Vorige keer'), h('div', { class: 'mono ' + (r.laatsteVerrassing > 0 ? 's-ok' : r.laatsteVerrassing < 0 ? 's-bad' : '') }, has(r.laatsteVerrassing) ? (r.laatsteVerrassing > 0 ? 'beat ' : 'mis ') + pct(r.laatsteVerrassing, 0, true) : '—')),
         h('span', { class: 'pill gloss ' + (n0 <= 7 ? 's-acc' : 's-mut'), style: { justifySelf: 'end' } }, wanneer(n0))); };
     return h('div', { class: 'grid', style: { gap: '22px' } },
@@ -810,6 +870,7 @@ ul.ontw { margin: 0; padding-left: 1.1rem; display: grid; gap: 8px; line-height:
         tile('Deze week', String(week.length), h('div', { style: { display: 'flex', gap: '6px', flexWrap: 'wrap' } }, week.map((r) => h('span', { class: 'chip gloss' }, r.ticker))), 'binnen 7 dagen'),
         tile('Uit je portefeuille', String(eigen.length), h('div', { style: { display: 'flex', gap: '6px', flexWrap: 'wrap' } }, eigen.map((r) => h('span', { class: 'chip gloss' }, r.ticker + ' · ' + datum(r.volgendeEarnings).replace(/ \d{4}$/, '')))), 'met een bekende datum'),
         tile('Nog geen datum', String(zonder.length), h('div', { style: { display: 'flex', gap: '6px', flexWrap: 'wrap' } }, zonder.map((r) => h('span', { class: 'chip gloss' }, r.ticker))), 'net gerapporteerd of nog niet aangekondigd')),
+      reactieCard(),
       Object.entries(groepen).map(([mnd, list]) => card(maandNaam(mnd).replace(/^./, (c) => c.toUpperCase()), list.length + ' bedrijven', h('div', null, list.map(rij)))),
       h('p', { class: 'cap', style: { margin: 0 } }, 'Datums en verwachtingen komen van Yahoo Finance; een datum kan een schatting zijn tot het bedrijf hem bevestigt. Verwachte winst en omzet in de rapportagevaluta van het bedrijf.'));
   }
@@ -996,9 +1057,10 @@ ul.ontw { margin: 0; padding-left: 1.1rem; display: grid; gap: 8px; line-height:
       { name: 'aandeel_details', description: 'Alle kengetallen, scores, koopcheck-uitkomsten, analyse (kern, bull, bear, ontwikkelingen) en recente nieuwskoppen van één aandeel uit de cockpit. Geef de ticker zoals in de lijst (bijv. META, MC.PA).', inputSchema: { type: 'object', properties: { ticker: { type: 'string' } }, required: ['ticker'] },
         execute: (inp) => { const t = String(inp.ticker || '').toUpperCase(); const r = D.byT[t]; if (!r) throw new Error('Onbekende ticker ' + t + '. Kies uit: ' + Object.keys(D.byT).join(', '));
           const { koersVs200d, rsi14, pos52w, rs3m, volRatio, shortChange, ...rest } = r;
-          return { ...rest, verhaal: D.vh[t] || null, ontwikkelingen: themaVoor(t).map((v) => ({ titel: v.titel, samenvatting: v.samenvatting, rol: v.betrokken.find((b) => b.ticker === t) })), kwartaalcijfers: D.financien.filter((f) => f.ticker === t).slice(0, 8), analyse: D.an[t] || null, checks: D.checks.filter((c) => c.ticker === t).map((c) => c.soort + ': ' + c.regel + ' = ' + (c.uitkomst ?? 'onbekend')), nieuws: D.nieuws.filter((x) => x.ticker === t).slice(0, 5).map((x) => x.datum + ' ' + x.titel), analistenacties: D.acties.filter((x) => x.ticker === t).slice(0, 4) }; } },
+          return { ...rest, verhaal: D.vh[t] || null, ontwikkelingen: themaVoor(t).map((v) => ({ titel: v.titel, samenvatting: v.samenvatting, rol: v.betrokken.find((b) => b.ticker === t) })), kwartaalcijfers: D.financien.filter((f) => f.ticker === t).slice(0, 12), kpis: D.kpi.filter((k) => k.ticker === t), insiders: D.insiders.filter((x) => x.ticker === t).slice(0, 6), analyse: D.an[t] || null, checks: D.checks.filter((c) => c.ticker === t).map((c) => c.soort + ': ' + c.regel + ' = ' + (c.uitkomst ?? 'onbekend')), nieuws: D.nieuws.filter((x) => x.ticker === t).slice(0, 5).map((x) => x.datum + ' ' + x.titel), analistenacties: D.acties.filter((x) => x.ticker === t).slice(0, 4) }; } },
       { name: 'portefeuille', description: 'Juup\'s posities met weging, de sectorverdeling tegenover de wereldindex en de maandkeuze.', execute: () => ({ posities: D.portfolio, sectoren: D.blootstelling, maandkeuze: D.mk }) },
       { name: 'ontwikkelingen', description: 'De samenhangende thema\'s van deze maand (bijv. AI-bouwgolf, luxedip) met welke bedrijven positief of negatief geraakt worden en waarom.', execute: () => D.vb },
+      { name: 'macro', description: 'Rente (ECB, VS 10 jaar), rentecurve, euro/dollar, VIX en marktsentiment, met een korte duiding.', execute: () => ({ macro: D.macro, markt: D.m }) },
       { name: 'etfs', description: 'De vergeleken ETF\'s met score, kosten, aandeel VS, Big Tech-gewicht en samenhang met de portefeuille.', execute: () => D.etfs },
       { name: 'earnings', description: 'Komende kwartaalcijfers van bedrijven in de cockpit met datum en verwachtingen.', execute: () => D.aandelen.filter((r) => r.volgendeEarnings).map((r) => ({ ticker: r.ticker, datum: r.volgendeEarnings, epsVerwacht: r.epsVerwacht, omzetVerwachtMld: r.omzetVerwachtMld, vorigeVerrassing: r.laatsteVerrassing })) },
     ];
